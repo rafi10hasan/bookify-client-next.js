@@ -63,7 +63,7 @@ export default function RoomRating({ room }) {
  useEffect(()=>{
     async function isUserBookedThisRoom(){
       try {
-        if (session?.data?.id && _id) { // Ensure both values are defined
+        if (!session?.data?.id && _id) { // Ensure both values are defined
           const response = await fetch(
             `http://localhost:5000/booking/verify-purchase-room/${session?.data?.id}/${_id}`
           );

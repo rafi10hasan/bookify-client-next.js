@@ -30,6 +30,7 @@ export default async function singleRoomPage({ params, searchParams }) {
     method:"GET",
     headers:{
       'Authorization': `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json'
     },
     cache: "no-store",
   });

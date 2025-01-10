@@ -24,6 +24,9 @@ export default async function SearchRooms({ searchParams }) {
 
   const response = await fetch(`http://localhost:5000/searchrooms?${queryString}`, {
     method: "GET",
+    headers:{
+      "Content-Type": "application/json"
+    },
     cache: "no-store",
   });
   const fetchedRooms = await response.json();
