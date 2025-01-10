@@ -4,7 +4,7 @@ import { FilterMobileCourse } from "@/components/Filter/FilterMobileCourse";
 import PaginationCom from "@/components/pagination/Pagination";
 import NoRooms from "@/components/Rooms/no-rooms";
 import RoomList from "@/components/Rooms/RoomList";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function singleRoomPage({ params, searchParams }) {
   const session = await auth();
@@ -34,6 +34,9 @@ export default async function singleRoomPage({ params, searchParams }) {
     cache: "no-store",
   });
   const fetchedRoom = await response.json();
+  if(!fetchedRoom){
+    notFound()
+  }
   const {minimumPrice,maximumPrice,totalCounts,updatedRooms} = fetchedRoom
   
   return (

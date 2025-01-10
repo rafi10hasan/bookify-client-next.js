@@ -1,5 +1,5 @@
 export default function NotFound() {
-    console.log('asdasd')
+
   return (
     
     <div className="w-[100vw] h-[100vh]  ">
