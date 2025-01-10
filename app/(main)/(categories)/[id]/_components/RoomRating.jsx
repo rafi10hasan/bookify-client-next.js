@@ -24,7 +24,7 @@ export default function RoomRating({ room }) {
   const [isVerifyPurchase,setIsVerifyPurchase] = useState(false)
   const [open, setOpen] = useState(false);
   const session = useAuth();
-  
+  console.log(session.data)
   const router = useRouter()
   const totalRatings = ratings?.length;
   const avgRating = totalRatings
@@ -47,23 +47,30 @@ export default function RoomRating({ room }) {
   
 
   const getUserRatingByRoom = useCallback( async () => {
-    if (session?.data?.id && _id) {
+
       try {
-        const response = await fetch(`http://localhost:5000/rating/${session?.data?.id}/${_id}`);
-        if (!response.ok) throw new Error('Failed to fetch rating');
-        
-        const data = await response.json();
-        setCurrentRating(data.rating);
+        if(session?.data && _id){
+          const response = await fetch(`http://localhost:5000/rating/${session?.data?.id}/${_id}`);
+          if (!response.ok) throw new Error('Failed to fetch rating');
+          
+          const data = await response.json();
+          setCurrentRating(data.rating);
+        }
+
+        else{
+          return;
+        }
+       
       } catch (error) {
         throw new Error(error)
       }
-    }
-  },[_id,session?.data?.id]);
+  },[_id,session]);
 
  useEffect(()=>{
     async function isUserBookedThisRoom(){
       try {
-        if (!session?.data?.id && _id) { // Ensure both values are defined
+        if (session?.data && _id) {
+          console.log('access') // Ensure both values are defined
           const response = await fetch(
             `http://localhost:5000/booking/verify-purchase-room/${session?.data?.id}/${_id}`
           );
@@ -81,7 +88,7 @@ export default function RoomRating({ room }) {
       isUserBookedThisRoom()
     
     
- },[session?.data?.id,_id])
+ },[session,_id])
 
   useEffect(() => {
     getUserRatingByRoom();

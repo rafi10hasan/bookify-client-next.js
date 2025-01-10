@@ -13,7 +13,7 @@ export default function PastBokings ({pastBookings}) {
   return (
     <>
     {
-      pastBookings.lenght ? (
+      pastBookings.length ? (
 
         <Table className="w-full text-center font-medium border-collapse">
         <TableHeader >
