@@ -1,6 +1,6 @@
 "use client";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 
 
@@ -33,10 +33,10 @@ const Carousel = () => {
     setCurrentIndex(isFirstSlide ? slides.length - 1 : currentIndex - 1);
   };
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     const isLastSlide = currentIndex === slides.length - 1;
     setCurrentIndex(isLastSlide ? 0 : currentIndex + 1);
-  };
+  },[currentIndex]);
 
   const goToSlide = (index) => {
     setCurrentIndex(index);
@@ -45,7 +45,7 @@ const Carousel = () => {
   useEffect(() => {
     const intervalId = setTimeout(nextSlide, 3000);
     return () => clearTimeout(intervalId);
-  }, [currentIndex]);
+  }, [currentIndex,nextSlide]);
 
   return (
     <div className="relative w-full h-[650px] ">

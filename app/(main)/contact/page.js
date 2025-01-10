@@ -2,6 +2,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { CircleCheckIcon } from "lucide-react";
+import Image from "next/image";
 
 export default function ContactUsPage(){
    const {toast} = useToast()
@@ -44,7 +45,7 @@ export default function ContactUsPage(){
                 How can we help you?
               </h2>
               <div className="md:pt-6">
-                    <img src="https://img.freepik.com/free-vector/contact-concept-landing-page_23-2148203331.jpg?t=st=1735399211~exp=1735402811~hmac=1a2ebaf5e73b985caa561c794e868a3cd126f4c0da999a70309e7028ae3a9bef&w=740" alt="" />
+                    <Image src="https://img.freepik.com/free-vector/contact-concept-landing-page_23-2148203331.jpg?t=st=1735399211~exp=1735402811~hmac=1a2ebaf5e73b985caa561c794e868a3cd126f4c0da999a70309e7028ae3a9bef&w=740" alt="contact" className="w-full" width={300} height={300} />
               </div>
             </div>
 

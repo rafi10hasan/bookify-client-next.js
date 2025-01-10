@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import Image from "next/image";
 
 export default async function Review() {
   const response =  await fetch('http://localhost:5000/review')
@@ -33,11 +34,12 @@ export default async function Review() {
                     <div className="flex justify-between items-center mb-6">
                       <div className="flex items-center">
                         <div className="mr-2">
-                          <img
+                          <Image
                             src={review?.userId?.image}
-                            alt=""
+                            alt={review?.userId?.firstname}
                             className="w-[50px] h-[50px] rounded-full object-cover"
-                            width="47"
+                            width={50}
+                            height={50}
                           />
                         </div>
                         <div>

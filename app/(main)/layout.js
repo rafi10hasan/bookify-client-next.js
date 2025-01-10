@@ -4,7 +4,11 @@ import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
 import { Inter, Poppins } from "next/font/google";
 import "../globals.css";
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 const poppins = Poppins({ subsets: ["latin"], variable: "--font-poppins", weight: "300" });
 
 export const metadata = {

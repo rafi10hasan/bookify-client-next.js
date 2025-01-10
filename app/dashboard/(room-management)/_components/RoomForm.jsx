@@ -101,7 +101,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
 
   useEffect(() => {
       setSelectedAmenities(amenitiesData);
-  }, []);
+  }, [amenitiesData]);
 
   useEffect(() => {
     async function getGalleryFiles() {

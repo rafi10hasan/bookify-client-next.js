@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { StarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { RatingBar } from "./RatingBar";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
@@ -46,9 +45,8 @@ export default function RoomRating({ room }) {
     }
   };
   
-  console.log(isVerifyPurchase)
 
-  const getUserRatingByRoom = async () => {
+  const getUserRatingByRoom = useCallback( async () => {
     if (session?.data?.id && _id) {
       try {
         const response = await fetch(`http://localhost:5000/rating/${session?.data?.id}/${_id}`);
@@ -60,7 +58,7 @@ export default function RoomRating({ room }) {
         throw new Error(error)
       }
     }
-  };
+  },[_id,session?.data?.id]);
 
  useEffect(()=>{
     async function isUserBookedThisRoom(){
@@ -87,7 +85,7 @@ export default function RoomRating({ room }) {
 
   useEffect(() => {
     getUserRatingByRoom();
-  }, [session?.data?.id,_id]);
+  }, [getUserRatingByRoom]);
 
   async function handleSubmit(e){
     e.preventDefault();
