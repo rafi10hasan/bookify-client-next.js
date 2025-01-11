@@ -7,11 +7,15 @@ export async function urlToFile(url){
   const filename = extractFileName(fileNameWithExtension)
   const fileExtension = filename.split('.').pop();
   const mimeType = getMimeType(fileExtension);
-
-  const response = await fetch(url);
-  if (!response.ok) {
-      throw new Error(`Failed to fetch file: ${response.statusText}`);
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch file: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    return new File([blob], filename, { type: mimeType });
+  } catch (error) {
+    throw new Error(error)
   }
-  const blob = await response.blob();
-  return new File([blob], filename, { type: mimeType });
+
 }

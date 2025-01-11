@@ -6,7 +6,7 @@ import TotalEarning from "./_components/TotalEarning";
 import TotalUser from "./_components/TotalUser";
 
 export default async function OverViewPage(){
-
+  try {
     const response = await fetch('http://localhost:5000/dashboard/overview')
     const data = await response.json();
     return (
@@ -40,5 +40,9 @@ export default async function OverViewPage(){
         </div>
 
     ) 
+  } catch (error) {
+    throw new Error(error)
+  }
+ 
 
 }

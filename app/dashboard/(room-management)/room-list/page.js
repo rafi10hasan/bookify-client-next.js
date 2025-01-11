@@ -10,9 +10,14 @@ export default function RoomListPage() {
   const { toast } = useToast();
 
   const fetchRooms = async () => {
-    const response = await fetch(`http://localhost:5000/rooms/roomlist`);
-    const data = await response.json();
-    setRoomList(data);
+    try {
+      const response = await fetch(`http://localhost:5000/rooms/roomlist`);
+      const data = await response.json();
+      setRoomList(data);
+    } catch (error) {
+      throw new Error(error)
+    }
+   
   };
   useEffect(() => {
     fetchRooms();

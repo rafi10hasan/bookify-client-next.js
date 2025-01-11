@@ -44,14 +44,18 @@ export default function ReviewSection({room}) {
 
   useEffect(()=>{
     async function isUserBookedThisRoom(){
+      try {
         const response = await fetch(`http://localhost:5000/booking/verify-purchase-room/${session?.data?.id}/${roomId}`);
-        if(!!response.ok){
-          return;
+        if(!response.ok){
+          throw new Error(`Failed to fetch data: ${response.statusText}`);
         }
         const data = await response.json();
         if(data.isVerifyPurchase){
           setIsVerifyPurchase(true)
         }
+      } catch (error) {
+        throw new Error(error)
+      }
     }
     isUserBookedThisRoom()
  },[session?.data?.id,roomId])

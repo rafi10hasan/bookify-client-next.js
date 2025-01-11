@@ -53,9 +53,14 @@ export default function UserManageMentPage() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await fetch(`http://localhost:5000/dashboard/users`);
+      try {
+        const response = await fetch(`http://localhost:5000/dashboard/users`);
       const data = await response.json();
       setUsers(data);
+      } catch (error) {
+        throw new Error(error)
+      }
+      
     };
     fetchUsers();
   }, []);

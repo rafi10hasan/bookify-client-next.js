@@ -10,7 +10,9 @@ import {
 import Image from "next/image";
 
 export default async function Review() {
-  const response =  await fetch('http://localhost:5000/review')
+
+  try {
+    const response =  await fetch('http://localhost:5000/review')
   const reviews = await response.json();
 
   return (
@@ -68,6 +70,10 @@ export default async function Review() {
     </Carousel>
   </>
   )
+  } catch (error) {
+     throw new Error(error)
+  } 
+  
 }
 
 

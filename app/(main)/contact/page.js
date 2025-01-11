@@ -14,26 +14,30 @@ export default function ContactUsPage(){
             email: formData.get('email'),
             message: formData.get('message'),
         }
-      
+      try {
         const response = await fetch(`http://localhost:5000/contact`,{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json", // Set the content type for JSON
-            },
-            body: JSON.stringify(contactData)
-        })
-        if(response.ok){
-            const data = await response.json()
-            toast({
-                variant: "success",
-                description: (
-                  <div className="flex items-center">
-                  <CircleCheckIcon className="mr-2" />
-                  <span>{data}</span>
-                </div>
-                ),
-                })
-        }
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json", // Set the content type for JSON
+          },
+          body: JSON.stringify(contactData)
+      })
+      if(response.ok){
+          const data = await response.json()
+          toast({
+              variant: "success",
+              description: (
+                <div className="flex items-center">
+                <CircleCheckIcon className="mr-2" />
+                <span>{data}</span>
+              </div>
+              ),
+              })
+      }
+      } catch (error) {
+        throw new Error(error)
+      }
+        
     }
 
     return (

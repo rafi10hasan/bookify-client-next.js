@@ -105,16 +105,19 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
 
   useEffect(() => {
     async function getGalleryFiles() {
-      const files = await processGallery(initialData?.gallery);
-      const previewFiles = files.map((file)=>{
-        return {
-          file,
-          preview: URL.createObjectURL(file)
-        }
-      })
-      setGalleryPreviews(previewFiles)
+      try{
+        const files = await processGallery(initialData?.gallery);
+        const previewFiles = files.map((file)=>{
+          return {
+            file,
+            preview: URL.createObjectURL(file)
+          }
+        })
+        setGalleryPreviews(previewFiles)
+      }catch(error){
+        throw new Error(error)
+      } 
     }
-    
     getGalleryFiles()
   }, [initialData?.gallery]);
 
@@ -127,22 +130,32 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
 
   useEffect(() => {
     async function getCategories() {
-      const response = await fetch("http://localhost:5000/categories/sub");
-      const data = await response.json();
-      if (data) {
-        setCategories(data);
+      try {
+        const response = await fetch("http://localhost:5000/categories/sub");
+        const data = await response.json();
+        if (data) {
+          setCategories(data);
+        }
+      } catch (error) {
+        throw new Error(error)
       }
+     
     }
     getCategories();
   }, []);
 
   useEffect(() => {
     async function getAmenities() {
+      try {
       const response = await fetch("http://localhost:5000/amenity");
       const data = await response.json();
       if (data) {
         setAmenities(data);
       }
+      } catch (error) {
+        throw new Error(error)
+      }
+      
     }
     getAmenities();
   }, []);
@@ -187,24 +200,29 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
         formData.append("gallery", file.file);
       });
     }
-
    
-    const response = await fetch(`http://localhost:5000/rooms/add`, {
-      method: "POST",
-      body: formData,
-    });
-  
-    if (response.ok) {
-      toast({
-        variant: "success",
-        description: (
-          <div className="flex items-center">
-            <CircleCheckIcon className="mr-2" />
-            <span>room added succesfully</span>
-          </div>
-        ),
+    try {
+      const response = await fetch(`http://localhost:5000/rooms/add`, {
+        method: "POST",
+        body: formData,
       });
+    
+      if (response.ok) {
+        toast({
+          variant: "success",
+          description: (
+            <div className="flex items-center">
+              <CircleCheckIcon className="mr-2" />
+              <span>room added succesfully</span>
+            </div>
+          ),
+        });
+      }
+    } catch (error) {
+        throw new Error(error)
     }
+   
+    
   }
 
   return (

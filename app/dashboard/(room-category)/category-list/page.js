@@ -28,11 +28,15 @@ export default function CategoryListPage() {
 
   const { toast } = useToast();
 
-
     const fetchCategories = async () => {
-      const response = await fetch(`http://localhost:5000/categories/all`);
-      const data = await response.json();
-      setCategories(data);
+      try {
+        const response = await fetch(`http://localhost:5000/categories/all`);
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        throw new Error(error)
+      }
+    
     };
     
 

@@ -2,8 +2,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-
-
 const slides = [
   {
     title: "Rooms&Suites",
