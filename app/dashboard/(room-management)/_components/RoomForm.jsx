@@ -49,7 +49,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
       price: initialData?.price.toString() || "1",
       description: initialData?.description || "",
       adults: initialData?.Adults.toString() || "1",
-      children: initialData?.children.toString() || "1",
+      children: initialData?.children.toString() || "0",
       bedType: initialData?.bed_type.toString() || "",
       roomType: initialData?.room_type || "",
       image: initialData?.image || null,
@@ -352,7 +352,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
                           <SelectContent>
                             <SelectGroup>
                               <SelectLabel>select children</SelectLabel>
-                              {Array.from(["1", "2", "3", "4", "5"], (item) => (
+                              {Array.from(["0","1", "2", "3", "4", "5"], (item) => (
                                 <SelectItem key={item} value={item}>
                                   {item}
                                 </SelectItem>
