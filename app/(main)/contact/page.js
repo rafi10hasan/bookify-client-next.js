@@ -15,7 +15,7 @@ export default function ContactUsPage(){
             message: formData.get('message'),
         }
       try {
-        const response = await fetch(`http://localhost:5000/contact`,{
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/contact`,{
           method: "POST",
           headers: {
               "Content-Type": "application/json", // Set the content type for JSON

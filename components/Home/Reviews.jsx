@@ -12,7 +12,7 @@ import Image from "next/image";
 export default async function Review() {
 
   try {
-    const response =  await fetch('http://localhost:5000/review')
+    const response =  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/review`)
   const reviews = await response.json();
 
   return (
