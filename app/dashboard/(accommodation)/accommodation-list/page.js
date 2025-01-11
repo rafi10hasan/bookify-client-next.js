@@ -26,7 +26,7 @@ export default function AccommodationListPage() {
 
   const fetchAccommodation = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/accommodations`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/accommodations`);
       const data = await response.json();
       setAccommodations(data);
     } catch (error) {
@@ -46,7 +46,7 @@ export default function AccommodationListPage() {
 
   const handleAccEdit = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/accommodations/${selectedAcc?._id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/accommodations/${selectedAcc?._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

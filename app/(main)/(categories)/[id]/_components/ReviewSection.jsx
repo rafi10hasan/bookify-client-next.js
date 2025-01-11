@@ -45,7 +45,7 @@ export default function ReviewSection({room}) {
   useEffect(()=>{
     async function isUserBookedThisRoom(){
       try {
-        const response = await fetch(`http://localhost:5000/booking/verify-purchase-room/${session?.data?.id}/${roomId}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/verify-purchase-room/${session?.data?.id}/${roomId}`);
         if(!response.ok){
           throw new Error(`Failed to fetch data: ${response.statusText}`);
         }
@@ -69,7 +69,7 @@ export default function ReviewSection({room}) {
      message: data.message
     }
      try{
-        const response = await fetch('http://localhost:5000/review/add',{
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/review/add`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"

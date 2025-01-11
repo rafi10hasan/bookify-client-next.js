@@ -13,7 +13,7 @@ export default async function Review() {
 
   try {
     const response =  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/review`)
-  const reviews = await response.json();
+    const reviews = await response.json();
 
   return (
     <>

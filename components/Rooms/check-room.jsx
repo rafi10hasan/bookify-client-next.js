@@ -43,7 +43,7 @@ export default function CheckRoom({ singleRoom ,checkin,checkout,room} ) {
     
     try{
       await new Promise((resolve)=>setTimeout(()=>{resolve()},2000))
-      const response = await fetch('http://localhost:5000/check/availability',{
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/check/availability`,{
         method:"POST",
         headers: {
           "Content-Type": "application/json"

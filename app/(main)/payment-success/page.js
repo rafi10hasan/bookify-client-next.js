@@ -19,7 +19,7 @@ const Success = async ({ searchParams: { session_id} }) => {
         redirect("/login");
     }
 
-    const response = await fetch(`http://localhost:5000/api/payment/verify-payment-intent`,{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/verify-payment-intent`,{
         method:"POST",
         headers: {
             "Content-type": "application/json"

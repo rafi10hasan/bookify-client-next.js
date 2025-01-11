@@ -3,7 +3,7 @@ import RoomForm from "../../_components/RoomForm";
 export default async function editRoomPage({ params }) {
   const { id } = await params;
   try {
-    const response = await fetch(`http://localhost:5000/rooms/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/${id}`, {
       headers:{
         "Content-Type":"application/json"
       },

@@ -8,6 +8,7 @@ import RoomList from "@/components/Rooms/RoomList";
 import { notFound, redirect } from "next/navigation";
 
 export default async function singleRoomPage({ params, searchParams }) {
+  let fetchedRoom;
   try {
     // Authenticate the user
     const session = await auth();
@@ -31,7 +32,7 @@ export default async function singleRoomPage({ params, searchParams }) {
     }).toString();
 
     // Fetch room data
-    const response = await fetch(`http://localhost:5000/rooms/all/${id}?${queryString}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}?${queryString}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
@@ -44,11 +45,13 @@ export default async function singleRoomPage({ params, searchParams }) {
       throw new Error(`Failed to fetch data: ${response.statusText}`);
     }
 
-    const fetchedRoom = await response.json();
+    fetchedRoom = await response.json();
     if (!fetchedRoom) {
       notFound();
     }
-
+  } catch (error) {
+    throw new Error(error)
+   }
     // Destructure the fetched data
     const { minimumPrice, maximumPrice, totalCounts, updatedRooms } = fetchedRoom;
 
@@ -82,7 +85,5 @@ export default async function singleRoomPage({ params, searchParams }) {
         </div>
       </>
     );
-  } catch (error) {
-     throw new Error(error)
-  }
+ 
 }

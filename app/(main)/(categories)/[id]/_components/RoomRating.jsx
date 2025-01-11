@@ -50,7 +50,7 @@ export default function RoomRating({ room }) {
 
       try {
         if(session?.data && _id){
-          const response = await fetch(`http://localhost:5000/rating/${session?.data?.id}/${_id}`);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rating/${session?.data?.id}/${_id}`);
           if (!response.ok) throw new Error('Failed to fetch rating');
           
           const data = await response.json();
@@ -72,7 +72,7 @@ export default function RoomRating({ room }) {
         if (session?.data && _id) {
           console.log('access') // Ensure both values are defined
           const response = await fetch(
-            `http://localhost:5000/booking/verify-purchase-room/${session?.data?.id}/${_id}`
+            `${process.env.NEXT_PUBLIC_API_URL}/booking/verify-purchase-room/${session?.data?.id}/${_id}`
           );
           const data = await response.json();
           if (data.isVerifyPurchase) {
@@ -104,7 +104,7 @@ export default function RoomRating({ room }) {
       rating:rating
     }
       try {
-        const response = await fetch('http://localhost:5000/rating/add', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rating/add`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

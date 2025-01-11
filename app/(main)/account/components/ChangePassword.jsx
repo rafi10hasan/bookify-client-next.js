@@ -78,7 +78,7 @@ export default function ChangePassword() {
   async function onEmailSubmit(data) {
     await new Promise((resolve)=>setTimeout(()=>{resolve()},1000))
      try {
-       const response = await fetch('http://localhost:5000/verify/email',{
+       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify/email`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -112,7 +112,7 @@ export default function ChangePassword() {
       try {
         setLoading(true)
         await delay(2000)
-        const response = await fetch(`http://localhost:5000/verify/OTP/${session.id}`,{
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify/OTP/${session.id}`,{
           method: "POST",
           headers:{
             "Content-Type": "application/json"
@@ -149,7 +149,7 @@ export default function ChangePassword() {
       password: data.password
     }
         try {
-          const response = await fetch(`http://localhost:5000/profile/update-password/${session.id}`,{
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/update-password/${session.id}`,{
             method:"PUT",
             headers:{
               "Content-Type" : "application/json"

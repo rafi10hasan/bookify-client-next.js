@@ -8,7 +8,7 @@ export default function BookingHistoryPage() {
   useEffect(() => {
     async function fetchBookings() {
       try {
-        const response = await fetch("http://localhost:5000/booking/all");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/all`);
         const bookings = await response.json();
         setBookings(bookings);
       } catch (error) {

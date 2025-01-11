@@ -65,7 +65,7 @@ export default function ProfileUpdate() {
     formData.append("email", data.email);
     formData.append("image", data.image);
     try {
-      const response = await fetch(`http://localhost:5000/profile/update/${session?.id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/update/${session?.id}`, {
         method: "PUT",
         body: formData,
       });

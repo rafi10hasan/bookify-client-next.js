@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export default async function transactionPage() {
   try {
     const session = await auth();
-    const response = await fetch(`http://localhost:5000/transaction/${session.id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transaction/${session.id}`);
     const transactionData = await response.json();
     return (
       <div className="px-4 py-2">

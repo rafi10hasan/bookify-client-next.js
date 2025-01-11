@@ -22,7 +22,7 @@ export default async function SearchRooms({ searchParams }) {
 
   }).toString();
    try {
-    const response = await fetch(`http://localhost:5000/searchrooms?${queryString}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/searchrooms?${queryString}`, {
       method: "GET",
       headers:{
         "Content-Type": "application/json"

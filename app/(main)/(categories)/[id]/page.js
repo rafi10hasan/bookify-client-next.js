@@ -14,7 +14,7 @@ export default async function singeleRoomDetails({ params ,searchParams}) {
     } 
     const {checkin,checkout,selectedRoom} = await searchParams;
   
-    const response = await fetch(`http://localhost:5000/rooms/${id}`,{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/${id}`,{
       method:"GET",
       headers:{
         "Content-Type":"application/json"

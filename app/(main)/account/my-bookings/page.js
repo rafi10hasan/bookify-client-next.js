@@ -14,7 +14,7 @@ import { format } from "date-fns";
 export default async function myBooking() {
   const session = await auth();
   try {
-    const response = await fetch(`http://localhost:5000/booking/mybookings/${session.id}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/mybookings/${session.id}`);
     const bookingsData = await response.json();
     if (bookingsData.length === 0) {
       return <CardContent className="p-2">There are no bookings found for this user</CardContent>;

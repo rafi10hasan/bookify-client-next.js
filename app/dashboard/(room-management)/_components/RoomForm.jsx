@@ -131,7 +131,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
   useEffect(() => {
     async function getCategories() {
       try {
-        const response = await fetch("http://localhost:5000/categories/sub");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/sub`);
         const data = await response.json();
         if (data) {
           setCategories(data);
@@ -147,7 +147,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
   useEffect(() => {
     async function getAmenities() {
       try {
-      const response = await fetch("http://localhost:5000/amenity");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/amenity`);
       const data = await response.json();
       if (data) {
         setAmenities(data);
@@ -202,7 +202,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
     }
    
     try {
-      const response = await fetch(`http://localhost:5000/rooms/add`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/add`, {
         method: "POST",
         body: formData,
       });

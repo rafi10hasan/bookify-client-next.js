@@ -11,7 +11,7 @@ export default function RoomListPage() {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/rooms/roomlist`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/roomlist`);
       const data = await response.json();
       setRoomList(data);
     } catch (error) {
@@ -25,7 +25,7 @@ export default function RoomListPage() {
 
   async function handleDelete(id) {
     try {
-      const response = await fetch(`http://localhost:5000/rooms/delete/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/delete/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {

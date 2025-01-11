@@ -54,7 +54,7 @@ export default function UserManageMentPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/dashboard/users`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/users`);
       const data = await response.json();
       setUsers(data);
       } catch (error) {
@@ -67,7 +67,7 @@ export default function UserManageMentPage() {
 
   const handleAddUser = async (data) => {
     try{
-      const response = await fetch(`http://localhost:5000/auth/signup`,{
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,{
        method: "POST",
        headers:{
             "Content-Type": "application/json"
@@ -107,7 +107,7 @@ export default function UserManageMentPage() {
 
   const handleMakeAdmin = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/dashboard/users/role/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/users/role/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: "admin" }),
@@ -143,7 +143,7 @@ export default function UserManageMentPage() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/dashboard/users/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/users/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {

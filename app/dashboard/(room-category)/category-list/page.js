@@ -30,7 +30,7 @@ export default function CategoryListPage() {
 
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/categories/all`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/all`);
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -49,12 +49,12 @@ export default function CategoryListPage() {
 
     if (title === "add category" || title === "add sub category") {
   
-      url = "http://localhost:5000/categories/add";
+      url = `${process.env.NEXT_PUBLIC_API_URL}/categories/add`;
       method = "POST";
     }
 
     if (title === "edit category" || title === "edit sub category") {
-      url = `http://localhost:5000/categories/update/${editingCategory._id}`;
+      url = `${process.env.NEXT_PUBLIC_API_URL}/categories/update/${editingCategory._id}`;
       method = "PATCH";
     }
 
@@ -91,7 +91,7 @@ export default function CategoryListPage() {
 
   const handleDeleteOperation = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/categories/${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {

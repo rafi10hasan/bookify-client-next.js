@@ -7,7 +7,7 @@ import TotalUser from "./_components/TotalUser";
 
 export default async function OverViewPage(){
   try {
-    const response = await fetch('http://localhost:5000/dashboard/overview')
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/overview`)
     const data = await response.json();
     return (
       

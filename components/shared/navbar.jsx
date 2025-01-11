@@ -31,7 +31,7 @@ export default function Navbar() {
   useEffect(() => {
     async function getCategories() {
       try {
-        const response = await fetch("http://localhost:5000/categories");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
         if (response.status === 200) {
           const data = await response.json();
           if (data.length > 0) {

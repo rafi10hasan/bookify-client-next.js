@@ -10,7 +10,7 @@ export default async function MyBookingsPage() {
       if(!session){
         redirect('/login')
       }
-      const response = await fetch(`http://localhost:5000/booking/history/${session?.id}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/history/${session?.id}`);
       const data = await response.json();
    
     return (
