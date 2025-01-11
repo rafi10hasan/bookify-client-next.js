@@ -32,7 +32,7 @@ export default async function singleRoomPage({ params, searchParams }) {
     }).toString();
 
     // Fetch room data
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}?${queryString}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/all/${id}?${queryString}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${session.accessToken}`,
