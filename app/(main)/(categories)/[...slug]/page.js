@@ -27,8 +27,8 @@ export default async function singleRoomPage({ params, searchParams }) {
       sort: sort || "",
       view: view || "",
       grading: grading || "",
-      minPrice: minPrice?.toString() || "",
-      maxPrice: maxPrice?.toString() || "",
+      minPrice: minPrice ? Number(minPrice) : 1,
+      maxPrice: maxPrice ? Number(maxPrice) : 1,
     }).toString();
 
     // Fetch room data
