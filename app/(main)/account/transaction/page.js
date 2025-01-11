@@ -1,5 +1,6 @@
 import { auth } from "@/auth.config";
 import Transaction from "../components/Transaction";
+export const dynamic = "force-dynamic"; 
 
 export default async function transactionPage() {
   try {

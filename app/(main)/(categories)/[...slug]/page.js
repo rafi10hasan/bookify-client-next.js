@@ -17,7 +17,7 @@ export default async function singleRoomPage({ params, searchParams }) {
 
     // Extract parameters and build the query string
     const { page, limit, sort, view, grading, minPrice, maxPrice } = searchParams;
-    const { slug } = params;
+    const { slug } = await params;
     const id = slug[1];
 
     const queryString = new URLSearchParams({
