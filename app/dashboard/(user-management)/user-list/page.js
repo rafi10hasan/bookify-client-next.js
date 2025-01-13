@@ -96,7 +96,7 @@ export default function UserManageMentPage() {
          description: (
            <div className="flex items-center">
              <SquareX className="mr-2" />
-             <span>user already exist</span>
+             <span>user already exist in database</span>
            </div>
          ),
        })
