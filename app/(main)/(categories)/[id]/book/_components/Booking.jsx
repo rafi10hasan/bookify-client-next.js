@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { differenceInDays } from "date-fns";
 
@@ -24,8 +23,8 @@ const BookingSchema = z.object({
   email: z.string().email("please enter a valid email"),
 });
 
-export default function Booking({ checkin, checkout, room, price, title, roomId }) {
-  const session = useAuth();
+export default function Booking({ checkin, checkout, room, price, title, roomId ,userId }) {
+  
   // Log the parsed dates to check format
   const totalDays = differenceInDays(new Date(checkout), new Date(checkin));
   const totalPrice = `${totalDays * price * room}$`;
@@ -45,7 +44,7 @@ export default function Booking({ checkin, checkout, room, price, title, roomId 
       name: data.name,
       phone: data.phone,
       email: data.email,
-      userId: session?.data?.id,
+      userId: userId,
       roomId:roomId,
       roomName:title,
       checkin: checkin,

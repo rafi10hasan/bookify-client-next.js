@@ -1,10 +1,17 @@
 
+import { auth } from "@/auth.config";
 import Booking from "./_components/Booking";
+import { redirect } from "next/navigation";
 
 
 export default async function BookingPage({params,searchParams}){
-    const {id} = await params
-    const{checkin,checkout,selectedRoom,price,title} = await searchParams;
+    
+    const session = await auth();
+    if(!session){
+      redirect('/login')
+    }
+    const {id} = params;
+    const{checkin,checkout,selectedRoom,price,title} = searchParams;
     return (
         <section className="h-screen flex flex-col justify-center">
         <div className="max-w-[650px] w-[90vw] mx-auto space-y-3 border border-gray-700/20 rounded-md bg-white">
@@ -16,6 +23,7 @@ export default async function BookingPage({params,searchParams}){
             price={price}
             title={title}
             roomId={id}
+            userId={session.id}
           />
         </div>
       </section>
