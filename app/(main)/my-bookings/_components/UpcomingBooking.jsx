@@ -1,3 +1,4 @@
+import { auth } from "@/auth.config";
 import { Badge } from "@/components/ui/badge";
 import {
     Table,
@@ -9,7 +10,12 @@ import {
   } from "@/components/ui/table";
 
 import { format } from "date-fns";
-export default function UpcomingBooking ({upcomingBookings}) {
+import { redirect } from "next/navigation";
+export default async function UpcomingBooking ({upcomingBookings}) {
+  const session = await auth();
+          if(!session){
+            redirect('/login')
+          }
   return (
     <>
       {

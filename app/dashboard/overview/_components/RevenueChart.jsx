@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
- const options = {
+const options = {
   responsive: true,
   plugins: {
     legend: {
@@ -32,9 +32,9 @@ ChartJS.register(
       display: true,
       text: 'Revenue Line Chart',
     },
-    tooltip:{
-      backgroundColor: 'rgb(155,32,99)'
-    }
+    tooltip: {
+      backgroundColor: 'rgb(155,32,99)',
+    },
   },
 };
 
@@ -58,9 +58,11 @@ export default function RevenueChart ({revenueData}) {
   };
   
   return (
-    <>
-      <Line options={options} data={data} />
- 
-    </>
+    <div className='bg-slate-50 shadow-md px-3 py-4 rounded-md'>
+      <Line 
+      options={options} 
+      data={data} 
+      />
+    </div>
   );
 }

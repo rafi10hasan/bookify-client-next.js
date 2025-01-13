@@ -78,7 +78,10 @@ export const RoomSchema = z.object({
     meal: z.string("Each meal must have a valid name"),
     category: z.string("Category is required"),
     view: z.string("View is required"),
-    amenities: z
+    amenities: z.string("amenity is required")
+  });
+  /*
+amenities: z
       .array(z.string("Each amenity must have a valid name"))
       .nonempty("Amenities are required and must have at least one item"),
-  });
+  */

@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleCheck, Croissant, CrossIcon, EyeIcon, EyeOffIcon, Loader, SquareX } from "lucide-react";
+import { CircleCheck, EyeIcon, EyeOffIcon, Loader, SquareX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,7 +55,9 @@ export default function ChangePassword() {
   const [loading,setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const {toast} = useToast()
+  const {toast} = useToast();
+
+  
   const emailForm = useForm({
     resolver: zodResolver(emailSchema),
     defaultValues: {

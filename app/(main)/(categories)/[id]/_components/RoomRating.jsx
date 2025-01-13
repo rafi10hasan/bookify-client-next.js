@@ -24,7 +24,7 @@ export default function RoomRating({ room }) {
   const [isVerifyPurchase,setIsVerifyPurchase] = useState(false)
   const [open, setOpen] = useState(false);
   const session = useAuth();
-  console.log(session.data)
+ 
   const router = useRouter()
   const totalRatings = ratings?.length;
   const avgRating = totalRatings

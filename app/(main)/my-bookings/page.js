@@ -4,15 +4,14 @@ import UpcomingBooking from "./_components/UpcomingBooking";
 import { auth } from "@/auth.config";
 import { redirect } from "next/navigation";
 export default async function MyBookingsPage() {
-
     const session = await auth();
+    if(!session){
+      redirect('/login')
+    }
     try {
-      if(!session){
-        redirect('/login')
-      }
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/history/${session?.id}`);
       const data = await response.json();
-   
+      console.log(data)
     return (
       <div>
         <h1 className="text-2xl text-center text-deep-yellow font-semibold mt-20 mb-10">

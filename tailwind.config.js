@@ -12,6 +12,10 @@ module.exports = {
 			sans: ['var(--font-inter)'],
 			mono: ['var(--font-poppins)'],
 		  },
+		  transitionProperty: {
+			'height': 'height',
+			'spacing': 'margin, padding',
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

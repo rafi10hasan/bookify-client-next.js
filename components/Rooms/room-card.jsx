@@ -72,7 +72,7 @@ export default function RoomCard({ fromSearchPage, room ,checkin,checkout}) {
           <BookCheck className="size-5 text-deep-yellow" />
           <p>{reviews.length} reviews</p>
         </div>
-        <div className="align-self-end">
+        <div className="align-self-end mt-2">
           {fromSearchPage ? (
             <Link
               href={`/${_id}?checkin=${checkin}&checkout=${checkout}`}

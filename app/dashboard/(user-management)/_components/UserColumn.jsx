@@ -2,7 +2,6 @@
 import { Badge } from "@/components/ui/badge";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MailIcon, ShieldPlus, SquarePen, Trash2, User, UserCircle, UserCircle2 } from "lucide-react";
-import Image from "next/image";
 
 const columnsHelper = createColumnHelper();
 
@@ -12,14 +11,12 @@ const createColumns = ({onMakeAdmin,onDelete}) => [
         cell: (info) => {
             const imageUrl = info.getValue(); // Get the image URL from the data
             return (
-              <div className="">
+              <div>
                 {
-                    imageUrl ?  (<Image
+                    imageUrl ?  (<img
                     src={imageUrl}
-                    alt="Profile"
-                    width={10}
-                    height={10}
-                    className="w-10 h-10 rounded-full object-cover"
+                    alt="profile"
+                    className="w-[50px] h-[50px] rounded-full object-cover"
                   />): <User className="w-10 h-10"/>
                 }
                

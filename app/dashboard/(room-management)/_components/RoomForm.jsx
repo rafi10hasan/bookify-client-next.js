@@ -31,16 +31,17 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { RoomSchema } from "./RoomSchema";
 
-export default function RoomForm({ initialData, roomId , amenitiesData}) {
+export default function RoomForm({ initialData, roomId, amenitiesData }) {
   const [imagePreview, setImagePreview] = useState("");
   const [galleryPreviews, setGalleryPreviews] = useState([]);
   const [categories, setCategories] = useState([]);
   const [amenities, setAmenities] = useState([]);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [selectedAmenities, setSelectedAmenities] = useState(amenitiesData || []);
   const fileInputRef = useRef();
   const { toast } = useToast();
-
-  
+   
+  console.log(selectedAmenities)
+  console.log(amenitiesData)
   const form = useForm({
     resolver: zodResolver(RoomSchema),
     defaultValues: {
@@ -58,7 +59,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
       meal: initialData?.meal.toString() || "",
       category: initialData?.categoryId.title || "",
       view: initialData?.view.toString() || "",
-      amenities: amenitiesData || [],
+      amenities: "",
     },
   });
   const { errors, isSubmitting } = form.formState;
@@ -71,25 +72,24 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
     });
   }
 
-  function handleGallerChange(e, field) {
+  function handleGalleryChange(e, field) {
     const files = Array.from(e.target.files);
-     const previews = files.map((file) => ({
-          file,
-          preview: URL.createObjectURL(file),
-     }));
+    const previews = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
     const galleryImages = galleryPreviews.concat(previews);
-    setGalleryPreviews(galleryImages)
-    
-    const imageFiles = galleryImages.map((file)=>file.file)
-    field.onChange(imageFiles)
+    setGalleryPreviews(galleryImages);
+
+    const imageFiles = galleryImages.map((file) => file.file);
+    field.onChange(imageFiles);
     // Update the field value with selected files
   }
 
   function handleDeleteGalleryImg(field, index) {
-    
     const files = galleryPreviews.filter((_, i) => i !== index);
     setGalleryPreviews(files);
-    const imageFiles = files.map((file)=>file.file)
+    const imageFiles = files.map((file) => file.file);
 
     field.onChange(imageFiles);
     fileInputRef.current.value = "";
@@ -99,26 +99,26 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
     setSelectedAmenities((prev) => prev.filter((p) => p !== item));
   }
 
-  useEffect(() => {
-      setSelectedAmenities(amenitiesData);
-  }, [amenitiesData]);
+  // useEffect(() => {
+  //   setSelectedAmenities(amenitiesData);
+  // }, [amenitiesData]);
 
   useEffect(() => {
     async function getGalleryFiles() {
-      try{
+      try {
         const files = await processGallery(initialData?.gallery);
-        const previewFiles = files.map((file)=>{
+        const previewFiles = files.map((file) => {
           return {
             file,
-            preview: URL.createObjectURL(file)
-          }
-        })
-        setGalleryPreviews(previewFiles)
-      }catch(error){
-        throw new Error(error)
-      } 
+            preview: URL.createObjectURL(file),
+          };
+        });
+        setGalleryPreviews(previewFiles);
+      } catch (error) {
+        throw new Error(error);
+      }
     }
-    getGalleryFiles()
+    getGalleryFiles();
   }, [initialData?.gallery]);
 
   useEffect(() => {
@@ -137,9 +137,8 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
           setCategories(data);
         }
       } catch (error) {
-        throw new Error(error)
+        throw new Error(error);
       }
-     
     }
     getCategories();
   }, []);
@@ -147,15 +146,14 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
   useEffect(() => {
     async function getAmenities() {
       try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/amenity`);
-      const data = await response.json();
-      if (data) {
-        setAmenities(data);
-      }
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/amenity`);
+        const data = await response.json();
+        if (data) {
+          setAmenities(data);
+        }
       } catch (error) {
-        throw new Error(error)
+        throw new Error(error);
       }
-      
     }
     getAmenities();
   }, []);
@@ -200,29 +198,30 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
         formData.append("gallery", file.file);
       });
     }
-   
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/add`, {
         method: "POST",
         body: formData,
       });
-    
+
       if (response.ok) {
         toast({
           variant: "success",
           description: (
             <div className="flex items-center">
               <CircleCheckIcon className="mr-2" />
-              <span>room added succesfully</span>
+              {
+                initialData ? (<span>room updated succesfully</span>) : (<span>room added succesfully</span>)
+              }
+              
             </div>
           ),
         });
       }
     } catch (error) {
-        throw new Error(error)
+      throw new Error(error);
     }
-   
-    
   }
 
   return (
@@ -347,12 +346,12 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
                       <FormControl>
                         <Select onValueChange={(val) => field.onChange(val)} value={field.value}>
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select children"/>
+                            <SelectValue placeholder="Select children" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
                               <SelectLabel>select children</SelectLabel>
-                              {Array.from(["0","1", "2", "3", "4", "5"], (item) => (
+                              {Array.from(["0", "1", "2", "3", "4", "5"], (item) => (
                                 <SelectItem key={item} value={item}>
                                   {item}
                                 </SelectItem>
@@ -543,7 +542,7 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
                             name="gallery"
                             multiple
                             ref={fileInputRef}
-                            onChange={(e) => handleGallerChange(e, field)}
+                            onChange={(e) => handleGalleryChange(e, field)}
                           />
                           {galleryPreviews.length > 0 && (
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -584,9 +583,13 @@ export default function RoomForm({ initialData, roomId , amenitiesData}) {
                       <FormLabel>amenities</FormLabel>
                       <FormControl>
                         <Select
-                          onValueChange={(val) => {
-                            field.onChange([...selectedAmenities, val]), handleChange(val);
-                          }}
+                            value={field.value}
+                            onValueChange={(val) => {
+                                console.log(val)
+                                field.onChange(val); 
+                                handleChange(val); 
+                              
+                            }}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="amenities" />

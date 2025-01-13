@@ -44,7 +44,6 @@ import {
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import { useAuth } from "@/hooks/use-auth"
-import Mynav from "./my-nav"
 
 // This is sample data.
 const data = {

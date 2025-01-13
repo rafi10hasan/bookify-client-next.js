@@ -7,8 +7,8 @@ import RoomRating from "./RoomRating";
 import { redirect } from "next/navigation";
 
  
-export default function SingleRoomPageDetails ({singleRoom}) {
-  const session = auth();
+export default async function SingleRoomPageDetails ({singleRoom}) {
+  const session = await auth();
   if(!session){
     redirect('/login')
   }

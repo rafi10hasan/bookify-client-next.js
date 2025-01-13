@@ -10,16 +10,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { redirect } from "next/navigation";
 
 export default async function myBooking() {
   const session = await auth();
+  if(!session){
+    redirect('/login')
+  }
+  let bookingsData;
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/mybookings/${session.id}`);
-    const bookingsData = await response.json();
+    bookingsData = await response.json();
     if (bookingsData.length === 0) {
       return <CardContent className="p-2">There are no bookings found for this user</CardContent>;
     }
-   
+  } catch (error) {
+    throw new Error(error)
+  }
+
     return (
       <div className="px-4 py-2">
       <h1 className="text-xl text-deep-cyan font-semibold mb-2">Your Bookings...</h1>
@@ -54,8 +62,6 @@ export default async function myBooking() {
       </div>
       </div>
     );
-  } catch (error) {
-    throw new Error(error)
-  }
+  
  
 }

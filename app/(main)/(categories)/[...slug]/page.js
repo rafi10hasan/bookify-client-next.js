@@ -9,27 +9,28 @@ import { notFound, redirect } from "next/navigation";
 
 export default async function singleRoomPage({ params, searchParams }) {
   let fetchedRoom;
-  try {
-    // Authenticate the user
-    const session = await auth();
+  const session = await auth();
+  // Authenticate the user
     if (!session) {
       redirect('/login');
     }
-
+  try {
+    
+    
+    const { slug } = params;
+    const id = slug[1];
     // Extract parameters and build the query string
     const { page, limit, sort, view, grading, minPrice, maxPrice } = searchParams;
-    const { slug } = await params;
-    const id = slug[1];
-
+    
     const queryString = new URLSearchParams({
       page: page || 1,
       limit: limit || 5,
       sort: sort || "",
       view: view || "",
       grading: grading || "",
-      minPrice: Number(minPrice),
-      maxPrice: Number(maxPrice),
-    }).toString();
+      minPrice: minPrice ? Number(minPrice) : "",
+      maxPrice: maxPrice ? Number(maxPrice) : "",
+    }).toString() || {};
 
     // Fetch room data
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms/all/${id}?${queryString}`, {
@@ -46,11 +47,12 @@ export default async function singleRoomPage({ params, searchParams }) {
     }
 
     fetchedRoom = await response.json();
+    console.log(fetchedRoom)
     if (!fetchedRoom) {
       notFound();
     }
   } catch (error) {
-    throw new Error(error)
+    throw new Error(error.message)
    }
     // Destructure the fetched data
     const { minimumPrice, maximumPrice, totalCounts, updatedRooms } = fetchedRoom;

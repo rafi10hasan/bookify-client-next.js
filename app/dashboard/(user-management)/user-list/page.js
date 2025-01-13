@@ -51,7 +51,6 @@ export default function UserManageMentPage() {
     },
   });
 
-  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/users`);
@@ -62,8 +61,11 @@ export default function UserManageMentPage() {
       }
       
     };
+    
+
+  useEffect(()=>{
     fetchUsers();
-  }, []);
+  },[]);
 
   const handleAddUser = async (data) => {
     try{
@@ -86,6 +88,7 @@ export default function UserManageMentPage() {
          ),
        })
        setDialogOpen(false)
+       fetchUsers();
       }
       else{
        toast({
@@ -113,9 +116,7 @@ export default function UserManageMentPage() {
         body: JSON.stringify({ role: "admin" }),
       });
       if (res.ok) {
-        setUsers((prev) =>
-          prev.map((user) => (user._id === id ? { ...user, role: "admin" } : user))
-        );
+        fetchUsers()
         toast({
           variant: "success",
           description: (
@@ -142,12 +143,13 @@ export default function UserManageMentPage() {
   };
 
   const handleDelete = async (id) => {
+
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/users/${id}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        setUsers((prev) => prev.filter((user) => user._id !== id));
+        fetchUsers()
         toast({
           variant: "success",
           description: (

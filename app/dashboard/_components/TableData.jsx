@@ -60,7 +60,7 @@ export default function TableData({ columns, data }) {
     },
     enableSortingRemoval: true,
   });
-
+  console.log(table.getRowModel())
   return (
     <div>
       <div className="flex flex-col min-h-screen py-4">
