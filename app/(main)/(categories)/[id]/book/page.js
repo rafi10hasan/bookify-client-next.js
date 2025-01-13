@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Booking from "./_components/Booking";
+import { auth } from "@/auth.config";
 
 export default async function BookingPage({params,searchParams}){
     const {id} = await params
