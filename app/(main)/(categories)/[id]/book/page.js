@@ -1,13 +1,9 @@
-import { redirect } from "next/navigation";
+
 import Booking from "./_components/Booking";
-import { auth } from "@/auth.config";
+
 
 export default async function BookingPage({params,searchParams}){
     const {id} = await params
-    const session = await auth();
-    if(!session){
-      redirect('/login')
-    }
     const{checkin,checkout,selectedRoom,price,title} = await searchParams;
     return (
         <section className="h-screen flex flex-col justify-center">

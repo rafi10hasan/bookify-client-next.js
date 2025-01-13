@@ -70,7 +70,6 @@ export default function RoomRating({ room }) {
     async function isUserBookedThisRoom(){
       try {
         if (session?.data && _id) {
-          console.log('access') // Ensure both values are defined
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/booking/verify-purchase-room/${session?.data?.id}/${_id}`
           );
