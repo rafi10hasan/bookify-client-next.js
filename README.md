@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org) project with tailwindcss [`create-next-a
 
 ## Demo
 
-https://bookify-dun-five.vercel.app/
+https://bookify-lac.vercel.app/
 
 
 ## Run Locally
