@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Bookify🔖
 
-First, run the development server:
+
+This is a [Next.js](https://nextjs.org) project with tailwindcss [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Demo
+
+https://bookify-lac.vercel.app/
+
+
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/rafi10hasan/bookify-client-next.js.git
 ```
 
+Go to the project directory
+
+```bash
+  cd bookify-client-next.js
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
+
+
+
+
+## Environment Variable
+
+`NEXTAUTH_SECRET` = your secret key
+
+`NEXT_PUBLIC_API_URL` = like [http://localhost:5000](http://localhost:5000)
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Authors
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- [@rafi10hasan](https://www.github.com/rafi10hasan)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+# Project Description:
 
-To learn more about Next.js, take a look at the following resources:
+## Introduction
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This is a hotel booking website where users can browse rooms,  check availability, and make reservations. The platform is built to provide a seamless experience for users and hotel administrators.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Technology Used
 
-## Deploy on Vercel
+next.js | React.js | tailwindcss | next-auth | react-hook-form | shadcn | react chart.js | date-fns | cloudFlare | imgbb
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### User Features:
+
+Browse and search for rooms.
+
+sorting rooms price,view,grading etc.
+
+View room details, prices, and amenities.
+
+check room availability
+
+Select check-in and check-out dates.
+
+Book rooms and receive confirmation.
+
+view their bookings
+
+give rating and review 
+
+### Admin Features:
+
+view business overview
+
+handle user management(add,delete,make admin)
+
+handle room management(add,edit,delete)
+
+handle room category
+
+update room accommodation
+
+view booking history
+## License
+
+
+
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. See the LICENSE file for details.
+

@@ -18,6 +18,7 @@ export const { auth, signIn, signOut, handlers} = NextAuth({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(credentials),
+            cache: "no-store",
           });
 
           if (!response.ok) throw new Error("Invalid credentials");
