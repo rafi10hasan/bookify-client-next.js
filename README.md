@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org) project with tailwindcss [`create-next-a
 
 ## Demo
 
-https://bookify-lac.vercel.app/
+https://bookify-dun-five.vercel.app/
 
 
 ## Run Locally
@@ -44,8 +44,14 @@ Start the server
 
 `NEXT_PUBLIC_API_URL` = like [http://localhost:5000](http://localhost:5000)
 
-
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Dashboard Access
+
+`email`: rafi@gmail.com
+
+`password`: 12345678
+
 ## Authors
 
 - [@rafi10hasan](https://www.github.com/rafi10hasan)
@@ -94,9 +100,8 @@ handle room category
 update room accommodation
 
 view booking history
+
 ## License
-
-
 
 This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License. See the LICENSE file for details.
 
