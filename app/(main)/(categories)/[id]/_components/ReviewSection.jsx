@@ -69,7 +69,7 @@ export default function ReviewSection({room}) {
      message: data.message
     }
      try{
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/review/add`,{
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews/add`,{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"

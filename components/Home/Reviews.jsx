@@ -1,4 +1,4 @@
-
+'use client'
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -8,12 +8,24 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
-export default async function Review() {
+export default function Review() {
+  const [reviews, setReviews] = useState([]);
 
-  try {
-    const response =  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/review`)
-    const reviews = await response.json();
+  useEffect(() => {
+    async function fetchReviews() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reviews`);
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        throw new Error(error)
+      }
+    }
+
+    fetchReviews();
+  }, []);
 
   return (
     <>
@@ -70,9 +82,6 @@ export default async function Review() {
     </Carousel>
   </>
   )
-  } catch (error) {
-     throw new Error(error)
-  } 
   
 }
 

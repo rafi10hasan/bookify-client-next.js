@@ -17,12 +17,15 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DropDownList from "./drop-down-list";
 import MobileNavbar from "./mobile-navbar";
+import { useRouter } from "next/navigation";
 
 
 export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [categories, setCategories] = useState([]);
   const loggedinSesion = useAuth();
+  const router = useRouter();
+
   let bgColor;
   if (loggedinSesion?.data) {
     bgColor = getBackgroundColor(loggedinSesion?.data?.user?.name);
@@ -45,6 +48,12 @@ export default function Navbar() {
 
     getCategories();
   }, []);
+
+  useEffect(() => {
+    if (loggedinSesion) {
+      router.refresh(); 
+    }
+  }, [router,loggedinSesion]);
 
   function handleLogout() {
     signOut();
