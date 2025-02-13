@@ -61,7 +61,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Introduction
 
-This is a hotel booking website where users can browse rooms,  check availability, and make reservations. The platform is built to provide a seamless experience for users and hotel administrators.
+This is a hotel booking website where user can browse rooms,  check availability, and make reservations. The platform is built to provide a seamless experience for users and hotel administrators.
 
 ## Technology Used
 
