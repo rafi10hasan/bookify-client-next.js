@@ -1,16 +1,16 @@
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-export const { auth, signIn, signOut, handlers} = NextAuth({
-    session: {
-        strategy: "jwt",
-      },
-      secret: process.env.NEXTAUTH_SECRET,
+
+export const { auth, signIn, signOut, handlers } = NextAuth({
+  trustHost: true, // <--- Render/Production host validation bypass er jonno
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
-      name:"credentials",
+      name: "credentials",
       async authorize(credentials) {
-     
         if (!credentials) return null;
 
         try {
@@ -21,21 +21,23 @@ export const { auth, signIn, signOut, handlers} = NextAuth({
             cache: "no-store",
           });
 
-          if (!response.ok) throw new Error("Invalid credentials");
-          
+          if (!response.ok) {
+            console.error("Backend auth failed with status:", response.status);
+            return null; // <--- Throw na kore null return korun
+          }
+
           const user = await response.json();
           if (user) return user;
           return null;
         } catch (error) {
-            throw new Error(error)
+          console.error("Auth error in authorize function:", error);
+          return null; // <--- Error catch e throw new Error() er jaygay null return korun
         }
       },
     }),
- 
   ],
   callbacks: {
-    async jwt({ token, user ,trigger, session}) {
-     
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.accessToken = user.accessToken;
         token.id = user.id;
@@ -49,8 +51,8 @@ export const { auth, signIn, signOut, handlers} = NextAuth({
 
       if (trigger === "update" && session) {
         token.user = {
-          ...token.user,  // Retain existing token data
-          ...session.user, // Merge updated user data
+          ...token.user,
+          ...session.user,
         };
       }
       return token;
@@ -60,11 +62,9 @@ export const { auth, signIn, signOut, handlers} = NextAuth({
       session.id = token.id;
       session.user = {
         ...session.user,
-        ...token.user,   
+        ...token.user,
       };
       return session;
-    }
-  }
-  
+    },
+  },
 });
-
