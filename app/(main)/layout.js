@@ -5,10 +5,10 @@ import { SessionProvider } from "next-auth/react";
 import { Inter, Poppins } from "next/font/google";
 import "../globals.css";
 const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 const poppins = Poppins({ subsets: ["latin"], variable: "--font-poppins", weight: "300" });
 
 export const metadata = {
@@ -18,16 +18,25 @@ export const metadata = {
 
 export default async function MainLayout({ children }) {
   return (
-    <SessionProvider>
-      <div className={cn(inter.className, poppins.className)} suppressHydrationWarning={true}>
-        <header>
-          <Navbar />
-        </header>
+   <SessionProvider>
+    <div
+      className={cn(
+        inter.className,
+        poppins.className,
+        "min-h-screen flex flex-col justify-between"
+      )}
+      suppressHydrationWarning={true}
+    >
+      <header>
+        <Navbar />
+      </header>
 
+      <main className="flex-1">
         {children}
+      </main>
 
-        <Footer />
-      </div>
-    </SessionProvider>
+      <Footer />
+    </div>
+  </SessionProvider>
   );
 }

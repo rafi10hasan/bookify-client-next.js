@@ -7,43 +7,49 @@ import TotalEarning from "./_components/TotalEarning";
 import TotalUser from "./_components/TotalUser";
 import { redirect } from "next/navigation";
 
-
 export default async function OverViewPage() {
   let data;
   const session = await auth();
-  if(!session){
-    redirect('/login')
+
+  if (!session) {
+    redirect("/login");
   }
+
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/overview`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard/overview`, {
+      cache: "no-store",
+    });
     data = await response.json();
   } catch (error) {
     throw new Error(error);
   }
+
   return (
-    <div className="grid grid-cols-12 gap-6">
-      <div className="col-span-6 lg:col-span-3">
-        <TotalUser totalUser={data.totalUsers} />
-      </div>
+    <div className="p-6 bg-slate-50/50 min-h-screen">
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <TotalUser totalUser={data?.totalUsers} />
+        </div>
 
-      <div className="col-span-6 lg:col-span-3">
-        <TotalBooked totalBooked={data.totalBooked} />
-      </div>
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <TotalBooked totalBooked={data?.totalBooked} />
+        </div>
 
-      <div className="col-span-6 lg:col-span-3">
-        <TotalEarning totalEarning={data.totalRevenue} />
-      </div>
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <TotalEarning totalEarning={data?.totalRevenue} />
+        </div>
 
-      <div className="col-span-6 lg:col-span-3">
-        <TodayArrival todayArrival={data.todayArrival} />
-      </div>
+        <div className="col-span-12 sm:col-span-6 lg:col-span-3">
+          <TodayArrival todayArrival={data?.todayArrival} />
+        </div>
 
-      <div className="col-span-12 lg:col-span-8">
-        <RevenueChart revenueData={data.revenueData} />
-      </div>
+        <div className="col-span-12 lg:col-span-8">
+          <RevenueChart revenueData={data?.revenueData || []} />
+        </div>
 
-      <div className="col-span-12 lg:col-span-4">
-        <CustomerSatisfaction rating={data.averageRating} />
+        <div className="col-span-12 lg:col-span-4">
+          <CustomerSatisfaction rating={data?.averageRating} />
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,28 @@
+
+import Link from "next/link";
+import { BookOpenText } from "lucide-react";
 import SignInForm from "./_components/SignInForm";
 
-export default function LoginPage(){
-    return (
-        <section className="h-screen grid place-items-center">
-        <div className="max-w-[400px] w-full mx-auto p-4 border border-gray-700/20 rounded-md bg-white shadow-md">
-          <h4 className="font-bold text-xl text-center text-deep-cyan mt-2 mb-2">Sign In</h4>
-          <SignInForm />
+export default function LoginPage() {
+  return (
+    <section className="min-h-screen bg-[#0f172a] flex flex-col justify-center items-center px-4 py-8">
+      {/* Bookify Brand Logo */}
+      <Link href="/" className="flex items-center gap-2 mb-6">
+        <div className="bg-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-blue-500/30">
+          <BookOpenText className="w-7 h-7" />
         </div>
-      </section>
-    );
+        <span className="text-3xl font-bold tracking-tight text-white">
+          Book<span className="text-blue-500">ify</span>
+        </span>
+      </Link>
+
+      {/* Card Container - max-w-xl width */}
+      <div className="w-full max-w-xl bg-[#1e293b]/80 border border-slate-700/60 rounded-2xl p-8 sm:p-10 shadow-2xl backdrop-blur-sm">
+        <h1 className="text-2xl font-bold text-white mb-6 text-left">
+          Sign in to your account
+        </h1>
+        <SignInForm />
+      </div>
+    </section>
+  );
 }

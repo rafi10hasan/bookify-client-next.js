@@ -1,136 +1,151 @@
-'use client'
-import { Badge } from "@/components/ui/badge";
+"use client";
+
 import { createColumnHelper } from "@tanstack/react-table";
-import { MailIcon, ShieldPlus, SquarePen, Trash2, User, UserCircle, UserCircle2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  MailIcon,
+  ShieldCheck,
+  ShieldPlus,
+  Trash2,
+  User,
+  UserCircle2,
+  SquarePen,
+} from "lucide-react";
 
 const columnsHelper = createColumnHelper();
 
-const createColumns = ({onMakeAdmin,onDelete}) => [
-   
-    columnsHelper.accessor('image',{
-        cell: (info) => {
-            const imageUrl = info.getValue(); // Get the image URL from the data
-            return (
-              <div>
-                {
-                    imageUrl ?  (<img
-                    src={imageUrl}
-                    alt="profile"
-                    className="w-[50px] h-[50px] rounded-full object-cover"
-                  />): <User className="w-10 h-10"/>
-                }
-               
-              </div>
-            );
-          },
-        header: ()=>(
-            <span className="flex items-center">
-                 <UserCircle2 className="mr-2" size={16}/>PROFILE
-            </span>
-        )
-    }),
+const createColumns = ({ onMakeAdmin, onDelete }) => [
+  columnsHelper.accessor("image", {
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <UserCircle2 className="w-4 h-4" /> Profile
+      </span>
+    ),
+    cell: (info) => {
+      const imageUrl = info.getValue();
+      return (
+        <div className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 border border-gray-200 overflow-hidden">
+          {imageUrl ? (
+            <img src={imageUrl} alt="profile" className="w-full h-full object-cover" />
+          ) : (
+            <User className="w-5 h-5 text-gray-400" />
+          )}
+        </div>
+      );
+    },
+  }),
 
+  columnsHelper.accessor("firstname", {
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <User className="w-4 h-4" /> First Name
+      </span>
+    ),
+    cell: (info) => <span className="font-medium text-gray-800 capitalize">{info.getValue() || "-"}</span>,
+  }),
 
-    columnsHelper.accessor('firstname',{
-        cell: (info)=> info.getValue(),
-        header: ()=>(
-            <span className="flex items-center">
-                 <User className="mr-2" size={16}/>FIRSTNAME
-            </span>
-        )
-    }),
+  columnsHelper.accessor("lastname", {
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <User className="w-4 h-4" /> Last Name
+      </span>
+    ),
+    cell: (info) => <span className="font-medium text-gray-800 capitalize">{info.getValue() || "-"}</span>,
+  }),
 
-    columnsHelper.accessor('lastname',{
-        cell: (info)=> info.getValue(),
-        header: ()=>(
-            <span className="flex items-center">
-                 <User className="mr-2" size={16}/>LASTNAME
-            </span>
-        )
-    }),
+  columnsHelper.accessor("email", {
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <MailIcon className="w-4 h-4" /> Email
+      </span>
+    ),
+    cell: (info) => <span className="text-gray-600">{info.getValue()}</span>,
+  }),
 
-    columnsHelper.accessor('email',{
-        cell: (info)=> info.getValue(),
-        header: ()=>(
-            <span className="flex items-center">
-                 <MailIcon className="mr-2" size={16}/>EMAIL
-            </span>
-        )
-    }),
+  columnsHelper.accessor("role", {
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <ShieldCheck className="w-4 h-4" /> Role
+      </span>
+    ),
+    cell: (info) => {
+      const role = info.getValue()?.toLowerCase();
+      const isAdmin = role === "admin";
+      return (
+        <Badge
+          className={`px-2.5 py-0.5 capitalize font-semibold shadow-none ${
+            isAdmin
+              ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+              : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50"
+          }`}
+          variant="outline"
+        >
+          {role || "user"}
+        </Badge>
+      );
+    },
+  }),
 
-    columnsHelper.accessor('role',{
-        cell: (info) => {
-            const role = info.getValue();
-      
-            // Define badge variants for roles
-            const badgeVariants = {
-              admin: "admin",
-              user: "user",      
-            };
-      
-            return (
-              <Badge variant={badgeVariants[role] || "default"}>
-                {role.charAt(0).toUpperCase() + role.slice(1)} {/* Capitalize role */}
-              </Badge>
-            );
-          },
-        header: ()=>(
-            <span className="flex items-center">
-                 <UserCircle className="mr-2" size={16}/>ROLE
-            </span>
-        )
-    }),
+  columnsHelper.display({
+    id: "admin",
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <ShieldPlus className="w-4 h-4" /> Admin Action
+      </span>
+    ),
+    cell: ({ row }) => {
+      const { role, _id } = row.original;
+      const isAdmin = role === "admin";
 
-    columnsHelper.display({
-        id: "admin",
-        header: () => (
-          <span className="flex items-center">
-            <UserCircle className="mr-2" size={16} /> ADMIN
-          </span>
-        ),
-        cell: ({ row }) => {
-          const { role, _id } = row.original; // Get the role and ID from the row
-          const isAdmin = role === "admin"; // Check if the user is already an admin
-      
-          return (
-            <button
-              onClick={() => !isAdmin && onMakeAdmin(_id)} // Call the function only if not already an admin
-              className={`flex items-center px-2 py-1 rounded ${
-                isAdmin
-                  ? "bg-gray-400 text-gray-700 cursor-not-allowed" // Disabled styling
-                  : "bg-deep-yellow text-white hover:bg-deep-cyan" // Active styling
-              }`}
-              disabled={isAdmin} // Disable the button if the user is already an admin
-            >
-              <ShieldPlus className="mr-1" size={16} />
-              {isAdmin ? "Already Admin" : "Make Admin"} {/* Update button text */}
-            </button>
-          );
-        },
-        enableSortingRemoval: false,
-      }),
+      return (
+        <Button
+          size="sm"
+          variant={isAdmin ? "ghost" : "outline"}
+          onClick={() => !isAdmin && onMakeAdmin(_id)}
+          disabled={isAdmin}
+          className={`h-8 gap-1.5 text-xs font-medium ${
+            isAdmin
+              ? "text-gray-400 bg-gray-50 border-transparent cursor-not-allowed"
+              : "text-amber-600 border-amber-300 hover:bg-amber-50 hover:text-amber-700"
+          }`}
+        >
+          <ShieldPlus className="w-3.5 h-3.5" />
+          {isAdmin ? "Already Admin" : "Make Admin"}
+        </Button>
+      );
+    },
+  }),
 
-    columnsHelper.display({
-        id: 'actions',
-        header: () => (
-            <span className="flex items-center">
-                <SquarePen className="mr-2" size={16} /> ACTION
-            </span>
-        ),
-        cell: ({ row }) => (
-            <button
-                onClick={() => onDelete(row.original._id)}
-                className="flex items-center bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-            >
-                <Trash2 className="mr-1" size={16} />
-                Delete
-            </button>
-        ),
-        enableSortingRemoval: false
-    }),
+  columnsHelper.display({
+    id: "actions",
+    header: () => (
+      <span className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        <SquarePen className="w-4 h-4" /> Actions
+      </span>
+    ),
+    cell: ({ row }) => {
+      const { role, _id } = row.original;
+      const isAdmin = role === "admin";
 
-    
-] 
+      return (
+        <Button
+          size="sm"
+          variant="destructive"
+          disabled={isAdmin}
+          onClick={() => !isAdmin && onDelete(_id)}
+          className={`h-8 gap-1.5 text-xs font-medium shadow-none transition-colors ${
+            isAdmin
+              ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400 border border-gray-200 hover:bg-gray-100 hover:text-gray-400"
+              : "bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-600 hover:text-white"
+          }`}
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          Delete
+        </Button>
+      );
+    },
+  }),
+];
 
-
-export default createColumns
+export default createColumns;

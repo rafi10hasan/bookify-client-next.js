@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
-  trustHost: true, // <--- Render/Production host validation bypass er jonno
+  trustHost: true, 
   session: {
     strategy: "jwt",
   },
@@ -23,7 +23,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
           if (!response.ok) {
             console.error("Backend auth failed with status:", response.status);
-            return null; // <--- Throw na kore null return korun
+            return null; 
           }
 
           const user = await response.json();
@@ -31,7 +31,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           return null;
         } catch (error) {
           console.error("Auth error in authorize function:", error);
-          return null; // <--- Error catch e throw new Error() er jaygay null return korun
+          return null; 
         }
       },
     }),

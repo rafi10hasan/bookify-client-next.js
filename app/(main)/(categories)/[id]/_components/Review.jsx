@@ -1,37 +1,38 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { getBackgroundColor } from "@/utils/user-color-name";
 import { format } from "date-fns";
 
 export default function Review({ review }) {
-  const { message, createdOn } = review;
-  const { firstname, lastname, image } = review?.userId;
-  const fullName = firstname.concat(" ", lastname);
-  const formattedDate = format(new Date(createdOn), "MMMM d, yyyy 'at' h:mm a");
+  const { message, createdOn, userId } = review || {};
+  const firstname = userId?.firstname || "Guest";
+  const lastname = userId?.lastname || "";
+  const image = userId?.image;
+  const fullName = `${firstname} ${lastname}`.trim();
+  
+  const formattedDate = createdOn 
+    ? format(new Date(createdOn), "MMM d, yyyy")
+    : "";
+    
   const bgColor = getBackgroundColor(firstname);
 
   return (
-    <>
-      <div className="flex items-start space-x-4">
-        {/* Profile Image */}
-        <div className="w-12 h-12 rounded-full overflow-hidden">
-          <Avatar className="w-[50px] h-[50px] rounded-full">
-            <AvatarImage className="object-cover" src={image} />
-            <AvatarFallback style={{ backgroundColor: bgColor }} className={cn("text-white")}>
-              {firstname[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </div>
+    <div className="py-4 flex items-start space-x-4">
+      <Avatar className="w-10 h-10 rounded-full border border-gray-100">
+        <AvatarImage className="object-cover" src={image || null} />
+        <AvatarFallback style={{ backgroundColor: bgColor }} className="text-white text-xs font-semibold">
+          {firstname[0]?.toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
 
-        {/* Review Content */}
-        <div className="flex-1 space-y-1 mb-4">
-          <h3 className="text-sm font-semibold uppercase text-gray-700">{fullName}</h3>
-          <p className="text-xs text-gray-500 mb-2">{formattedDate}</p>
-
-          {/* Review Text */}
-          <p className="text-sm text-gray-700 mt-2">{message}</p>
+      <div className="flex-1 space-y-1">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-semibold text-gray-900 capitalize">{fullName}</h4>
+          <span className="text-xs text-gray-400">{formattedDate}</span>
         </div>
+        <p className="text-sm text-gray-600 leading-relaxed pt-1">{message}</p>
       </div>
-    </>
+    </div>
   );
 }

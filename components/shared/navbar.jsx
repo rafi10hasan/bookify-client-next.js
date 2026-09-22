@@ -13,12 +13,11 @@ import { getBackgroundColor } from "@/utils/user-color-name";
 import { LogOut, LucideLayoutDashboard, Menu, User, UserCircle2Icon, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import DropDownList from "./drop-down-list";
 import MobileNavbar from "./mobile-navbar";
-import { useRouter } from "next/navigation";
-
 
 export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -35,7 +34,7 @@ export default function Navbar() {
     async function getCategories() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
-        console.log("response",response)
+        console.log("response", response);
         if (response.status === 200) {
           const data = await response.json();
           if (data.length > 0) {
@@ -52,9 +51,9 @@ export default function Navbar() {
 
   useEffect(() => {
     if (loggedinSesion) {
-      router.refresh(); 
+      router.refresh();
     }
-  }, [router,loggedinSesion]);
+  }, [router, loggedinSesion]);
 
   function handleLogout() {
     signOut();
@@ -63,7 +62,9 @@ export default function Navbar() {
     <div className="bg-midnight w-full h-20">
       <nav className="flex justify-around items-center h-full">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-400">Luxurios Hotel</h2>
+          <h2 className="text-2xl font-bold tracking-wide text-white dark:text-white font-serif">
+            Hotel <span className="text-amber-500 font-extrabold">Paradise</span>
+          </h2>
         </div>
         <div className="text-white hidden md:flex items-center space-x-8">
           <Link href="/">home</Link>
@@ -91,7 +92,11 @@ export default function Navbar() {
               <div className="cursor-pointer">
                 {loggedinSesion.data ? (
                   <Avatar className="w-[50px] h-[50px] rounded-full">
-                    <AvatarImage className="object-cover" src={loggedinSesion?.data?.user?.image} alt="@shadcn" />
+                    <AvatarImage
+                      className="object-cover"
+                      src={loggedinSesion?.data?.user?.image}
+                      alt="@shadcn"
+                    />
                     <AvatarFallback
                       style={{ backgroundColor: bgColor }}
                       className={cn("text-white")}

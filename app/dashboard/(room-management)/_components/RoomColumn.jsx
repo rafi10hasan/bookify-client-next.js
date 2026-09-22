@@ -27,8 +27,8 @@ const columnsHelper = createColumnHelper();
 const createRoomColumns = ({ onDelete }) => [
   columnsHelper.accessor("serial no", {
     cell: (info) => {
-      // Use `row.index` for serial number
-      const rowIndex = info.row.index + 1; // Adding 1 to make it 1-based instead of 0-based
+      
+      const rowIndex = info.row.index + 1; 
       return rowIndex;
     },
     header: () => (

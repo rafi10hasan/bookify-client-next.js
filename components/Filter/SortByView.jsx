@@ -32,16 +32,6 @@ const SortByView = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const params = new URLSearchParams(searchParams);
-
-  //   if (searchText.length > 0) {
-  //     params.set('view', encodeURI(searchText.join('|')));
-  //   } else {
-  //     params.delete('view');
-  //   }
-  //   replace(`${pathname}?${params.toString()}`);
-  // }, [searchText, pathname, replace, searchParams]);
 
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);

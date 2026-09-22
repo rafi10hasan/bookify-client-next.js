@@ -99,9 +99,6 @@ export default function RoomForm({ initialData, roomId, amenitiesData }) {
     setSelectedAmenities((prev) => prev.filter((p) => p !== item));
   }
 
-  // useEffect(() => {
-  //   setSelectedAmenities(amenitiesData);
-  // }, [amenitiesData]);
 
   useEffect(() => {
     async function getGalleryFiles() {
@@ -549,7 +546,7 @@ export default function RoomForm({ initialData, roomId, amenitiesData }) {
                               {galleryPreviews.map((preview, index) => (
                                 <div key={index} className="relative">
                                   <Image
-                                    src={preview.preview}
+                                    src={preview.preview || null}
                                     alt={`Preview ${index + 1}`}
                                     height={200}
                                     width={200}

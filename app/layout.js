@@ -1,7 +1,7 @@
 
 import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins} from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });

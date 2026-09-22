@@ -1,79 +1,64 @@
+import { BedDouble, Eye, Maximize2, Utensils, Sparkles, Users, Baby, LayoutGrid } from "lucide-react";
 
-import { BedDoubleIcon,  EyeIcon, FullscreenIcon, SoupIcon, Square, Star, User,} from "lucide-react";
+export default function RoomDetails({ room }) {
+  const { Adults, children, bed_type, room_type, amenities, meal, view, size } = room;
 
-export default function RoomDetails({room}) {
-  const {Adults,children,bed_type,room_type,amenities,meal,view,size} = room
+  const detailItems = [
+    { icon: Users, label: "Adults", value: Adults ?? "N/A" },
+    { icon: Baby, label: "Children", value: children ?? "0" },
+    { icon: Eye, label: "View", value: view },
+    { icon: Maximize2, label: "Size", value: size ? `${size} m²` : null },
+    { icon: BedDouble, label: "Bed Type", value: bed_type },
+    { icon: LayoutGrid, label: "Room Type", value: room_type },
+    { icon: Utensils, label: "Meal Plan", value: meal || "No meal included" },
+  ];
+
   return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-900">Room Overview & Amenities</h2>
 
-      <div className="w-full mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Details</h2>
-      <table className="w-full text-left border border-gray-200">
-        <tbody>
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="adults"><User className="size-4 mr-2"/></span> Adults:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">{Adults}</td>
-          </tr>
+      {/* Overview Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {detailItems.map((item, idx) => {
+          const Icon = item.icon;
+          if (!item.value) return null;
 
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="adults"><User className="size-4 mr-2"/></span> children:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">{children}</td>
-          </tr>
+          return (
+            <div
+              key={idx}
+              className="flex items-center space-x-3 p-3.5 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-md transition-all"
+            >
+              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-600 shrink-0">
+                <Icon className="w-5 h-5" />
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-xs font-medium text-gray-400 capitalize">{item.label}</p>
+                <p className="text-sm font-semibold text-gray-800 capitalize truncate">{item.value}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="amenities"><Star className="size-4 mr-2 text-deep-yellow fill-deep-yellow"/></span> Amenities:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">
-               {amenities?.length && amenities.map((amenity) => (
-                <span key={amenity._id}>{amenity.name}, </span> 
-               )
-                )}
-            </td>
-          </tr>
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="view"><EyeIcon className="size-4 mr-2" /></span> View:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">{view}</td>
-          </tr>
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="size"><FullscreenIcon className="size-4 mr-2" /></span> Size:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">{size}m<sup>2</sup></td>
-          </tr>
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="bed-type"><BedDoubleIcon className="size-4 mr-2" /></span> Bed Type:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">{bed_type}</td>
-          </tr>
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-b-2 border-gray-200">
-              <span role="img" aria-label="categories"><Square className="size-4 mr-2"/></span> Room Type:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">{room_type}</td>
-          </tr>
-
-          <tr>
-            <th className="py-2 px-4 text-sm font-semibold text-gray-600 flex items-center border-gray-200">
-              <span role="img" aria-label="categories"><SoupIcon className="size-4 mr-2"/></span> meal:
-            </th>
-            <td className="py-2 px-4 text-sm text-gray-700 border border-gray-200">
-              {
-                meal ? <span>{meal}</span> : "no meal included"
-              }
-              </td>
-          </tr>
-
-        </tbody>
-      </table>
+      {/* Amenities Badges */}
+      {amenities?.length > 0 && (
+        <div className="pt-2">
+          <div className="flex items-center space-x-2 mb-3">
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Amenities</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {amenities.map((amenity, index) => (
+              <span
+                key={amenity._id || index}
+                className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200/60 capitalize"
+              >
+                {amenity.name || amenity}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-
-
   );
 }

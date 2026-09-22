@@ -24,7 +24,7 @@ export default function PaginationCom({items}) {
   const initialLimit = parseInt(searchParams.get("limit")) || defaultItemsPerPage;
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [totalItems, setTotalItems] = useState(initialLimit);
-  const totalPages = Math.ceil(items / totalItems); // Ensure count is number
+  const totalPages = Math.ceil(items / totalItems); 
  
 
   function updateSearchParams(page, itemsPerPage) {

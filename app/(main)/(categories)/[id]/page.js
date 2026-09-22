@@ -42,7 +42,7 @@ export default async function singeleRoomDetails({ params ,searchParams}) {
                  <SingleRoomPageDetails singleRoom={room}/>
             </div>
   
-            <div className="col-span-12 order-1 lg:order-2 lg:col-span-4">
+            <div className="col-span-12 mt-8 order-1 lg:order-2 lg:col-span-4">
                   <CheckRoom
                   singleRoom={room}
                   checkin={checkin}

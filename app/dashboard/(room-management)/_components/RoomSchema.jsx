@@ -80,8 +80,3 @@ export const RoomSchema = z.object({
     view: z.string("View is required"),
     amenities: z.string("amenity is required")
   });
-  /*
-amenities: z
-      .array(z.string("Each amenity must have a valid name"))
-      .nonempty("Amenities are required and must have at least one item"),
-  */

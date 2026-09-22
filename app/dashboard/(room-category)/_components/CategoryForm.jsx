@@ -106,6 +106,7 @@ export default function CategoryForm({ categories, onDelete, onEdit, onCreate , 
                       <Button
                         variant="destructive"
                         size="sm"
+                        disabled
                         onClick={() => onDelete(category._id)}
                       >
                         Delete <Trash2 />

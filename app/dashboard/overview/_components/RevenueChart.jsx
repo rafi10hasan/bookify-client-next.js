@@ -1,68 +1,81 @@
-'use client'
+"use client";
+
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  BarElement,
   Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+  BarElement,
+  Tooltip
 );
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Revenue Line Chart',
-    },
-    tooltip: {
-      backgroundColor: 'rgb(155,32,99)',
-    },
-  },
-};
 
+const ALL_MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
 
-export default function RevenueChart ({revenueData}) {
+export default function RevenueChart({ revenueData = [] }) {
   
-  const labels = revenueData.map((data)=>data.monthName);
+  const formattedData = ALL_MONTHS.map((month) => {
+    const found = revenueData?.find(
+      (item) => item.monthName?.toLowerCase().startsWith(month.toLowerCase())
+    );
+    return found ? found.totalRevenue : 0;
+  });
 
   const data = {
-    labels,
+    labels: ALL_MONTHS, 
     datasets: [
       {
-        label: 'revenue',
-        data: revenueData.map((revenue) => `${revenue.totalRevenue}`),
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        hoverBackgroundColor:'rgb(16,65,99)',
-        tension:0.5
+        data: formattedData,
+        backgroundColor: "#2563eb", 
+        borderRadius: 20,
+        borderSkipped: false,
+        barThickness: 10,
       },
     ],
   };
-  
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: "#0f172a",
+        padding: 10,
+        displayColors: false,
+        callbacks: {
+          label: (context) => `Revenue: $${context.raw}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: "#64748b", font: { size: 11 } },
+      },
+      y: {
+        grid: { color: "#f1f5f9" },
+        ticks: { color: "#64748b", font: { size: 11 } },
+      },
+    },
+  };
+
   return (
-    <div className='bg-slate-50 shadow-md px-3 py-4 rounded-md'>
-      <Line 
-      options={options} 
-      data={data} 
-      />
+    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm h-full flex flex-col justify-between">
+      <div className="h-[280px] w-full">
+        <h3 className="text-blue-950 font-semibold">Revenue Chart</h3>
+        <Bar options={options} data={data} />
+      </div>
     </div>
   );
 }

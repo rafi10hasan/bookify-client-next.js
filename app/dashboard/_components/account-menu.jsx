@@ -47,16 +47,6 @@ export default function AccountMenu({ session }) {
           sideOffset={4}
         >
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <User />
-            <Link href="/account">Account</Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <Home />
-            <Link href="/">home</Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleLogOut}>
             <LogOut />
             Log out

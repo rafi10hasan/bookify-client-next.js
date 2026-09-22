@@ -1,41 +1,64 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PastBokings from "./_components/PastBokings";
+import PastBookings from "./_components/PastBokings";
 import UpcomingBooking from "./_components/UpcomingBooking";
 import { auth } from "@/auth.config";
 import { redirect } from "next/navigation";
+
 export default async function MyBookingsPage() {
-    const session = await auth();
-    if(!session){
-      redirect('/login')
-    }
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/history/${session?.id}`);
-      const data = await response.json();
-      console.log(data)
+  const session = await auth();
+  if (!session) {
+    redirect("/login");
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/booking/history/${session?.id}`,
+      { cache: "no-store" }
+    );
+    const data = await response.json();
+
     return (
-      <div>
-        <h1 className="text-2xl text-center text-deep-yellow font-semibold mt-20 mb-10">
-          My Bookings
-        </h1>
-        <div className="w-[90vw] lg:w-[72vw] mx-auto mb-10">
-          <Tabs defaultValue="past booking" className="">
-            <TabsList className="grid grid-cols-2 h-12">
-              <TabsTrigger className="text-lg" value="past booking">Past Booking</TabsTrigger>
-              <TabsTrigger className="text-lg" value="upcoming book">Upcoming Booking</TabsTrigger>
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:px-6 lg:px-8 space-y-8">
+        {/* Title Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            My Bookings
+          </h1>
+          <p className="text-sm text-slate-500">
+            View and manage all your past and upcoming room reservations.
+          </p>
+        </div>
+
+        {/* Tabs & Content */}
+        <div className="w-full">
+          <Tabs defaultValue="upcoming" className="w-full space-y-6">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12 p-1 bg-slate-100 rounded-xl">
+              <TabsTrigger
+                value="past"
+                className="text-sm font-medium rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm transition-all"
+              >
+                Past Bookings
+              </TabsTrigger>
+              <TabsTrigger
+                value="upcoming"
+                className="text-sm font-medium rounded-lg data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm transition-all"
+              >
+                Upcoming Bookings
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="past booking">
-              <PastBokings pastBookings = {data.pastBookings}/>
+
+            <TabsContent value="past" className="focus-visible:outline-none">
+              <PastBookings pastBookings={data?.pastBookings || []} />
             </TabsContent>
-  
-            <TabsContent value="upcoming book">
-              <UpcomingBooking upcomingBookings ={data.upcomingBookings}/>
+
+            <TabsContent value="upcoming" className="focus-visible:outline-none">
+              <UpcomingBooking upcomingBookings={data?.upcomingBookings || []} />
             </TabsContent>
           </Tabs>
         </div>
       </div>
     );
-    } catch (error) {
-      throw new Error(error)
-    }
-   
+  } catch (error) {
+    throw new Error(error.message || "Failed to load bookings");
+  }
 }

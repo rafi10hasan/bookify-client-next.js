@@ -1,6 +1,6 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -9,327 +9,181 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
- 
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp"
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleCheck, EyeIcon, EyeOffIcon, Loader, SquareX } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Check, Loader2, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
-import delay from "@/utils/delay";
 
-const emailSchema = z.object({
-  email: z.string().email("please enter a valid email"),
- 
-});
-
-const passwordSchema = z
+const ChangePasswordSchema = z
   .object({
-    password: z
-      .string()
-      .min(6, {
-        message:
-          "Password must be at least 6 characters",
-      }), 
-    confirmPassword: z.string(),
-  
+    oldPassword: z.string().min(1, "Old password is required"),
+    newPassword: z.string().min(6, "New password must be at least 6 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your new password"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "password do not match",
-    path: ["confirmPassword"],
+  .superRefine(({ newPassword, confirmPassword }, ctx) => {
+    if (newPassword !== confirmPassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "New password and Confirm password do not match",
+        path: ["confirmPassword"],
+      });
+    }
   });
 
 export default function ChangePassword() {
-  const {data:session} = useAuth()
-  const [isEmailVerified,setEmailVerified] = useState(false);
-  const [isOtpVerified,setIsOtpVerified] = useState(false);
-  const [otpValue,setOtpValue] = useState("");
-  const [loading,setLoading] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-  const {toast} = useToast();
-
-  
-  const emailForm = useForm({
-    resolver: zodResolver(emailSchema),
+  const { data: session } = useAuth();
+  const { toast } = useToast();
+  const form = useForm({
+    resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      email: "",
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
-  const passwordForm = useForm({
-    resolver: zodResolver(passwordSchema),
-    defaultValues: {
-      password: "",
-      confirmPassword:""
-    },
-  });
+  const { isSubmitting } = form.formState;
 
-  const {errors:emailError,isSubmitting:isEmailSubmitting} = emailForm.formState;
-  const {errors:passError,isSubmitting:isPasswordSubmitting} = passwordForm.formState;
-
-
-  async function onEmailSubmit(data) {
-    await new Promise((resolve)=>setTimeout(()=>{resolve()},1000))
-     try {
-       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify/email`,{
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+  async function onSubmit(values) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/profile/change-password/${session?.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            oldPassword: values.oldPassword,
+            newPassword: values.newPassword,
+          }),
         },
-        body:JSON.stringify(data)
-       })
-       if(response.status === 200){
-        const data = await response.json();
-        if(data.success){
-          setEmailVerified(true);
-        }
-       }
-       else{
+      );
+
+      const result = await response.json();
+      console.log(result, response);
+
+      if (!response.ok) {
+        const errorMessage = result?.message || result?.error || "Password update failed!";
         toast({
           variant: "error",
           description: (
             <div className="flex items-center">
-            <SquareX className="mr-2" />
-            <span>user not found</span>
-          </div>
+              <X className="mr-2" />
+              <span>{errorMessage}</span>
+            </div>
           ),
-          })
-       }
-     } catch (error) {
-        throw new Error(error)
-     }
-  }
- 
-  async function handleVerifyOtp(){
-   
-      try {
-        setLoading(true)
-        await delay(2000)
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify/OTP/${session.id}`,{
-          method: "POST",
-          headers:{
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({otp:Number(otpValue)})
         });
-        if(response.status === 200){
-          const data = await response.json();
-          if(data.success){
-            setIsOtpVerified(true);
-            setLoading(false)
-          }
-        }
-        else{
-          toast({
-            variant: "error",
-            description: (
-              <div className="flex items-center">
-              <SquareX className="mr-2" />
-              <span>Invalid OTP</span>
-            </div>
-            ),
-            })
-          setIsOtpVerified(false);
-          setLoading(false)
-        }
-      } catch (error) {
-        throw new Error(error)
+        return;
       }
-  }
-  
-  async function onPasswordSubmit(data){
-    const passwordData = {
-      password: data.password
-    }
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile/update-password/${session.id}`,{
-            method:"PUT",
-            headers:{
-              "Content-Type" : "application/json"
-            },
-            body: JSON.stringify(passwordData)
-          }) 
-          const data = await response.json();
-          if(data.success){
-            toast({
-              variant: "success",
-              description: (
-                <div className="flex items-center">
-                <CircleCheck className="mr-2" aria-label="Success" />
-                <span>password updated successfully</span>
-              </div>
-              ),
-              })
-              setEmailVerified(false);
-              setIsOtpVerified(false)
-          }
-        } catch (error) {
-           throw new Error(error)
-        }
-  }
-  return (
-    <div>
-      <div className="">
-        {!isEmailVerified && (
-           <Form {...emailForm}>
-           <CardContent>
-             <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="">
- 
-               <div className="outline-none">
-                 <FormField
-                   control={emailForm.control}
-                   name="email"
-                   render={({ field }) => (
-                     <FormItem>
-                       <FormLabel>Email</FormLabel>
-                       <FormControl>
-                         <Input type="email" placeholder="Enter your email" {...field} />
-                       </FormControl>
-                       <FormMessage />
-                     </FormItem>
-                   )}
-                 />
-               </div>
- 
-               <div className="w-[150px] mt-4">
-                 <Button className="w-full bg-midnight" type="submit" disabled={isEmailSubmitting}>
-                 {isEmailSubmitting ? (<>
-                 verify email<Loader className="animate-spin"/>
-               </>) : 'send email'}
-                 </Button>
-               </div>
-             </form>
-           </CardContent>
-           </Form>
- 
-        )}
-       
-        {
-          isEmailVerified && !isOtpVerified && (
-            <div className="space-y-2 mx-6">
-               <p className="text-deep-yellow font-semibold">Check your email! i have send 4 digit otp in your gmail account..</p>
-              <div className="flex gap-2">
-            <InputOTP
-              maxLength={4}
-              value={otpValue}
-              onChange={(value) => setOtpValue(value)}
-            >
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-              </InputOTPGroup>
-            </InputOTP>
-            <div className="w-[150px] mt-4">
-                  <Button onClick={handleVerifyOtp} className="w-full bg-midnight" type="submit" disabled={otpValue.length<=3}>
-                  {loading ? (<>
-                  VERIFY OTP <Loader className="animate-spin"/>
-                </>) : 'VERIFY OTP'}
-                  </Button>
-                </div>
-            </div>
-            <div className="text-sm">
-              {otpValue === "" ? (
-                <>Give Your OTP Value.</>
-              ) : (
-                <>You entered: {otpValue}</>
-              )}
-            </div>
-          </div>
-          )
-        }
 
-        {
-          isOtpVerified && (
-            <Form {...passwordForm}>
-            <CardContent>
-              <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="">
-              <FormField
-            control={passwordForm.control}
-            name="password"
+      form.reset();
+      toast({
+        variant: "success",
+        description: (
+          <div className="flex items-center">
+            <Check className="mr-2" />
+            <span>{result.message}</span>
+          </div>
+        ),
+      });
+    } catch (err) {
+      const errorMessage = result?.message || result?.error || "Password update failed!";
+      toast({
+        variant: "error",
+        description: (
+          <div className="flex items-center">
+            <X className="mr-2" />
+            <span>{errorMessage}</span>
+          </div>
+        ),
+      });
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-xl">
+        <div className="space-y-4">
+          {/* Old Password */}
+          <FormField
+            control={form.control}
+            name="oldPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-slate-700 font-medium">Old Password</FormLabel>
                 <FormControl>
-                  <div className="flex relative">
-                    <Input
-                      type={passwordVisible ? "text" : "password"}
-                      placeholder="Enter your password"
-                      {...field}
-                    />
-                    <Button
-                      variant="text"
-                      size="md"
-                      type="button"
-                      onClick={() => setPasswordVisible(!passwordVisible)}
-                      className="absolute right-2 top-2"
-                      aria-label="Toggle password visibility"
-                    >
-                      {passwordVisible ? <EyeIcon /> : <EyeOffIcon />}
-                    </Button>
-                  </div>
+                  <Input
+                    type="password"
+                    placeholder="Enter current password"
+                    className="rounded-xl border-slate-200 focus:ring-slate-400"
+                    {...field}
+                  />
                 </FormControl>
-                {/* <FormMessage>{passwordForm.errors.password?.message}</FormMessage> */}
+                <FormMessage />
               </FormItem>
             )}
           />
-          {/* password field */}
+
+          {/* New Password */}
           <FormField
-            control={passwordForm.control}
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-slate-700 font-medium">New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter new password"
+                    className="rounded-xl border-slate-200 focus:ring-slate-400"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Confirm Password */}
+          <FormField
+            control={form.control}
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>confirm Password</FormLabel>
+                <FormLabel className="text-slate-700 font-medium">Confirm New Password</FormLabel>
                 <FormControl>
-                  <div className="flex relative">
-                    <Input
-                      type={confirmPasswordVisible ? "text" : "password"}
-                      placeholder="Enter your password"
-                      {...field}
-                    />
-                    <Button
-                      variant="text"
-                      size="md"
-                      type="button"
-                      onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-                      className="absolute right-2 top-2"
-                      aria-label="Toggle password visibility"
-                    >
-                      {confirmPasswordVisible ? <EyeIcon /> : <EyeOffIcon />}
-                    </Button>
-                  </div>
+                  <Input
+                    type="password"
+                    placeholder="Confirm new password"
+                    className="rounded-xl border-slate-200 focus:ring-slate-400"
+                    {...field}
+                  />
                 </FormControl>
-                {/* <FormMessage>{passwordForm.errors.confirmPassword?.message}</FormMessage> */}
+                <FormMessage />
               </FormItem>
             )}
           />
-             
-  
-                <div className="w-[150px] mt-4">
-                  <Button className="w-full bg-midnight" type="submit" disabled={isPasswordSubmitting}>
-                  {isPasswordSubmitting ? (<>
-                  change password <Loader className="animate-spin"/>
-                </>) : 'change password'}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-            </Form>
-  
-          )
-        }
+        </div>
 
-      </div>
-    </div>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-6 py-2.5 font-medium shadow-sm transition-all"
+        >
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Updating Password...
+            </span>
+          ) : (
+            "Update Password"
+          )}
+        </Button>
+      </form>
+    </Form>
   );
 }

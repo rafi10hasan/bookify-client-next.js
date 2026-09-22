@@ -1,28 +1,27 @@
 import { auth } from "@/auth.config";
 import { redirect } from "next/navigation";
 import Transaction from "../components/Transaction";
+
 export const dynamic = "force-dynamic";
 
-export default async function transactionPage() {
+export default async function TransactionPage() {
   const session = await auth();
   if (!session) {
     redirect("/login");
   }
-  let transactionData;
+
+  let transactionData = [];
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transaction/${session.id}`);
-    transactionData = await response.json();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/transaction/${session.id}`,
+      { cache: "no-store" }
+    );
+    if (response.ok) {
+      transactionData = await response.json();
+    }
   } catch (error) {
-    throw new Error(error);
+    console.error("Failed to fetch transactions:", error);
   }
-  return (
-    <div className="px-4 py-2">
-      <h1 className="text-deep-cyan text-xl font-semibold mb-2">Your Transaction...</h1>
-      {transactionData.length > 0 ? (
-        <Transaction transactions={transactionData} />
-      ) : (
-        <p>no transaction found</p>
-      )}
-    </div>
-  );
+
+  return <Transaction transactions={transactionData} />;
 }
