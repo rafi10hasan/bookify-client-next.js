@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays, format, isValid } from "date-fns";
 import { Calendar, CreditCard, Mail, Phone, User, Loader2, BedDouble } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -42,12 +42,27 @@ export default function Booking({
 }) {
   const [loading, setLoading] = useState(false);
 
-  // Date parsing & price calculation
-  const totalDays = Math.max(
-    1,
-    differenceInDays(new Date(checkout), new Date(checkin))
-  );
-  const calculatedTotalPrice = totalDays * price * room;
+  // 1. Safe Date Parsing & Calculation (NaN Handled)
+  const startDate = checkin ? new Date(checkin) : null;
+  const endDate = checkout ? new Date(checkout) : null;
+
+  const isDatesValid =
+    startDate &&
+    endDate &&
+    isValid(startDate) &&
+    isValid(endDate);
+
+  const totalDays = isDatesValid
+    ? Math.max(1, differenceInDays(endDate, startDate))
+    : 0;
+
+  const parsedPrice = Number(price) || 0;
+  const parsedRoomCount = Number(room) || 1;
+  const calculatedTotalPrice = totalDays * parsedPrice * parsedRoomCount;
+
+  // 2. Safe Date Formatting for Default Values
+  const formattedCheckin = isDatesValid ? format(startDate, "MMM dd, yyyy") : "";
+  const formattedCheckout = isDatesValid ? format(endDate, "MMM dd, yyyy") : "";
 
   const form = useForm({
     resolver: zodResolver(BookingSchema),
@@ -55,12 +70,17 @@ export default function Booking({
       name: "",
       phone: "",
       email: "",
-      checkin: checkin ? format(new Date(checkin), "MMM dd, yyyy") : "",
-      checkout: checkout ? format(new Date(checkout), "MMM dd, yyyy") : "",
+      checkin: formattedCheckin,
+      checkout: formattedCheckout,
     },
   });
 
   async function onSubmit(data) {
+    if (!isDatesValid) {
+      alert("Please select valid Check-In and Check-Out dates first.");
+      return;
+    }
+
     setLoading(true);
     const bookingInfo = {
       name: data.name,
@@ -71,7 +91,7 @@ export default function Booking({
       roomName: title,
       checkin,
       checkout,
-      bookedRoom: room,
+      bookedRoom: parsedRoomCount,
       bookingPrice: calculatedTotalPrice,
     };
 
@@ -200,6 +220,7 @@ export default function Booking({
                         <Calendar className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                         <Input
                           readOnly
+                          placeholder="Not selected"
                           className="pl-9 h-10 text-sm bg-gray-50/80 text-gray-600 cursor-not-allowed border-gray-200"
                           {...field}
                         />
@@ -222,6 +243,7 @@ export default function Booking({
                         <Calendar className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                         <Input
                           readOnly
+                          placeholder="Not selected"
                           className="pl-9 h-10 text-sm bg-gray-50/80 text-gray-600 cursor-not-allowed border-gray-200"
                           {...field}
                         />
@@ -236,12 +258,12 @@ export default function Booking({
             <div className="bg-gray-50/70 border border-gray-200/80 rounded-xl p-4 space-y-2.5 text-sm">
               <div className="flex justify-between items-center text-gray-600">
                 <span>Per Night</span>
-                <span className="font-semibold text-gray-900">${price}</span>
+                <span className="font-semibold text-gray-900">${parsedPrice}</span>
               </div>
               <div className="flex justify-between items-center text-gray-600">
                 <span>Duration</span>
                 <span className="font-semibold text-gray-900">
-                  {totalDays} {totalDays === 1 ? "Night" : "Nights"}
+                  {totalDays} {totalDays <= 1 ? "Night" : "Nights"}
                 </span>
               </div>
               <div className="flex justify-between items-center text-gray-600">
@@ -250,7 +272,7 @@ export default function Booking({
                   Rooms
                 </span>
                 <span className="font-semibold text-gray-900">
-                  {room} {room === 1 ? "Room" : "Rooms"}
+                  {parsedRoomCount} {parsedRoomCount === 1 ? "Room" : "Rooms"}
                 </span>
               </div>
 
@@ -265,8 +287,8 @@ export default function Booking({
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={loading}
-              className="w-full h-11 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-base rounded-xl transition-all shadow-sm"
+              disabled={loading || !isDatesValid}
+              className="w-full h-11 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-base rounded-xl transition-all shadow-sm disabled:opacity-50"
             >
               {loading ? (
                 <>

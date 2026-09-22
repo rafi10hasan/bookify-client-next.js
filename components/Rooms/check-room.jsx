@@ -11,37 +11,36 @@ import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-export default function CheckRoom({ singleRoom, checkin, checkout, room }) {
+export default function CheckRoom({ singleRoom }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const { title = "", price = 0, _id: roomId } = singleRoom || {};
+
+  // 1. Initial State Sync with URL searchParams
   const initialCheckin = searchParams.get("checkin") ? new Date(searchParams.get("checkin")) : null;
   const initialCheckout = searchParams.get("checkout") ? new Date(searchParams.get("checkout")) : null;
+  const initialRoom = searchParams.get("selectedRoom") ? Number(searchParams.get("selectedRoom")) : null;
 
   const [checkinDate, setCheckinDate] = useState(initialCheckin);
   const [checkoutDate, setCheckoutDate] = useState(initialCheckout);
+  const [selectedRoom, setSelectedRoom] = useState(initialRoom);
+  
   const [foundRoom, setFoundRoom] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState(null);
   const [isCheckinPopoverOpen, setCheckinPopoverOpen] = useState(false);
   const [isCheckoutPopoverOpen, setCheckoutPopoverOpen] = useState(false);
 
-  const { title, price, _id: roomId } = singleRoom || {};
-
-  let params = "";
-  if (checkin && checkout && room) {
-    params = `?checkin=${checkin}&checkout=${checkout}&selectedRoom=${room}&price=${price}&title=${title}`;
-  }
-
+  // Helper to update URL params
   function generateQuery(key, value) {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     if (value) {
       params.set(key, value);
     } else {
       params.delete(key);
     }
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
   async function handleCheckSubmit(e) {
@@ -67,7 +66,7 @@ export default function CheckRoom({ singleRoom, checkin, checkout, room }) {
         setFoundRoom(data?.availableRoom ?? 0);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Availability Check Error:", err);
     } finally {
       setLoading(false);
     }
@@ -76,30 +75,40 @@ export default function CheckRoom({ singleRoom, checkin, checkout, room }) {
   const handleCheckinDateChange = (date) => {
     if (!date) return;
     const formattedDate = format(date, "yyyy-MM-dd");
-    generateQuery("checkin", formattedDate);
     setCheckinDate(date);
-    setCheckinPopoverOpen(false);
-    setFoundRoom(null);
     setCheckoutDate(null);
+    setSelectedRoom(null);
+    setFoundRoom(null);
+
+    generateQuery("checkin", formattedDate);
     generateQuery("checkout", "");
+    generateQuery("selectedRoom", "");
+    setCheckinPopoverOpen(false);
   };
 
   const handleCheckoutDateChange = (date) => {
     if (!date) return;
     const formattedDate = format(date, "yyyy-MM-dd");
-    generateQuery("checkout", formattedDate);
     setCheckoutDate(date);
-    setCheckoutPopoverOpen(false);
     setFoundRoom(null);
+
+    generateQuery("checkout", formattedDate);
+    setCheckoutPopoverOpen(false);
   };
 
   const handleRoomSelection = (roomNum) => {
+    const num = Number(roomNum);
+    setSelectedRoom(num);
     generateQuery("selectedRoom", roomNum);
-    setSelectedRoom(Number(roomNum));
   };
 
+  // 2. Dynamic Booking URL construction (Prevents NaN & missing query issues)
+  const formattedCheckinStr = checkinDate ? format(checkinDate, "yyyy-MM-dd") : "";
+  const formattedCheckoutStr = checkoutDate ? format(checkoutDate, "yyyy-MM-dd") : "";
+
+  const bookingUrl = `/${roomId}/book?checkin=${formattedCheckinStr}&checkout=${formattedCheckoutStr}&selectedRoom=${selectedRoom || 1}&price=${price}&title=${encodeURIComponent(title)}`;
+
   return (
-  
     <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-md sticky top-28 self-start transition-all">
       {/* Price Header */}
       <div className="text-center pb-5 mb-5 border-b border-slate-100 dark:border-slate-800">
@@ -183,7 +192,7 @@ export default function CheckRoom({ singleRoom, checkin, checkout, room }) {
               <p className="text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-lg border border-emerald-200/60 text-center">
                 ✓ {foundRoom} room(s) available for these dates!
               </p>
-              <Select onValueChange={handleRoomSelection}>
+              <Select onValueChange={handleRoomSelection} value={selectedRoom ? String(selectedRoom) : ""}>
                 <SelectTrigger className="w-full h-12 border-slate-200">
                   <SelectValue placeholder="Select quantity / room" />
                 </SelectTrigger>
@@ -206,7 +215,7 @@ export default function CheckRoom({ singleRoom, checkin, checkout, room }) {
           )
         ) : null}
 
-        {/* Submit / Book Action Button */}
+        {/* Action Button */}
         <div className="pt-2">
           {foundRoom === null || foundRoom === 0 ? (
             <Button
@@ -220,9 +229,9 @@ export default function CheckRoom({ singleRoom, checkin, checkout, room }) {
             <Button
               asChild
               disabled={!selectedRoom}
-              className="w-full h-12 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl transition-all shadow-md text-sm"
+              className="w-full h-12 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl transition-all shadow-md text-sm disabled:opacity-50"
             >
-              <Link href={`/${roomId}/book${params}`}>Book Reservation</Link>
+              <Link href={bookingUrl}>Book Reservation</Link>
             </Button>
           )}
         </div>
